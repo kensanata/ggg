@@ -66,7 +66,7 @@ Please select what kind of key you want:
 Your selection? 1
 RSA keys may be between 1024 and 4096 bits long.
 What keysize do you want? (2048) 4096
-Requested keysize is 4096 bits       
+Requested keysize is 4096 bits
 Please specify how long the key should be valid.
          0 = key does not expire
       <n>  = key expires in n days
@@ -76,17 +76,17 @@ Please specify how long the key should be valid.
 Key is valid for? (0) 1y
 Key expires at Sat Jul 23 10:15:55 2016 CEST
 Is this correct? (y/N) y
-                        
+
 GnuPG needs to construct a user ID to identify your key.
 
 Real name: Alex Schroeder
 Email address: kensanata@gmail.com
-Comment:                          
+Comment:
 You selected this USER-ID:
     "Alex Schroeder <kensanata@gmail.com>"
 
 Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
-You need a Passphrase to protect your secret key.    
+You need a Passphrase to protect your secret key.
 
 We need to generate a lot of random bytes. It is a good idea to perform
 some other action (type on the keyboard, move the mouse, utilize the
@@ -279,54 +279,54 @@ We'll keep our settings in a separate `~/.gnus` file. Gnus will read
 this file when it starts.
 
 ```
-(setq ;; You need to replace this email addres with your own!                                                             
+(setq ;; You need to replace this email address with your own!
       user-mail-address "kensanata@gmail.com"
-      ;; You need to replace this key ID with your own key ID!                                                            
+      ;; You need to replace this key ID with your own key ID!
       mml2015-signers '("7893C0FD")
-      ;; This tells Gnus to get email from Gmail via IMAP.                                                                
+      ;; This tells Gnus to get email from Gmail via IMAP.
       gnus-select-method
       '(nnimap "gmail"
-               ;; It could also be imap.googlemail.com if that's your server.                                             
+               ;; It could also be imap.googlemail.com if that's your server.
                (nnimap-address "imap.gmail.com")
                (nnimap-server-port 993)
                (nnimap-stream ssl))
-      ;; This tells Gnus to use the Gmail SMTP server. This                                                               
-      ;; automatically leaves a copy in the Gmail Sent folder.                                                            
+      ;; This tells Gnus to use the Gmail SMTP server. This
+      ;; automatically leaves a copy in the Gmail Sent folder.
       smtpmail-smtp-server "smtp.gmail.com"
       smtpmail-smtp-service 587
-      ;; Tell message mode to use SMTP.                                                                                   
+      ;; Tell message mode to use SMTP.
       message-send-mail-function 'smtpmail-send-it
-      ;; This is where we store the password.                                                                             
+      ;; This is where we store the password.
       nntp-authinfo-file "~/.authinfo.gpg"
-      ;; Gmail system labels have the prefix [Gmail], which matches                                                       
-      ;; the default value of gnus-ignored-newsgroups. That's why we                                                      
-      ;; redefine it.                                                                                                     
+      ;; Gmail system labels have the prefix [Gmail], which matches
+      ;; the default value of gnus-ignored-newsgroups. That's why we
+      ;; redefine it.
       gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
-      ;; The agent seems to confuse nnimap, therefore we'll disable it.                                                   
+      ;; The agent seems to confuse nnimap, therefore we'll disable it.
       gnus-agent nil
-      ;; We don't want local, unencrypted copies of emails we write.                                                      
+      ;; We don't want local, unencrypted copies of emails we write.
       gnus-message-archive-group nil
-      ;; We want to be able to read the emails we wrote.                                                                  
+      ;; We want to be able to read the emails we wrote.
       mml2015-encrypt-to-self t)
 
 ;; Attempt to encrypt all the mails we'll be sending.
 (add-hook 'message-setup-hook 'mml-secure-message-encrypt)
 
 ;; Add two key bindings for your Gmail experience.
-(add-hook 'gnus-summary-mode-hook 'my-gnus-summary-keys)                                                               
+(add-hook 'gnus-summary-mode-hook 'my-gnus-summary-keys)
 
 (defun my-gnus-summary-keys ()
   (local-set-key "y" 'gmail-archive)
   (local-set-key "$" 'gmail-report-spam))
 
 (defun gmail-archive ()
-  "Archive the current or marked mails.                                                                                   
+  "Archive the current or marked mails.
 This moves them into the All Mail folder."
   (interactive)
   (gnus-summary-move-article nil "nnimap+imap.gmail.com:[Gmail]/All Mail"))
 
 (defun gmail-report-spam ()
-  "Report the current or marked mails as spam.                                                                            
+  "Report the current or marked mails as spam.
 This moves them into the Spam folder."
   (interactive)
   (gnus-summary-move-article nil "nnimap+imap.gmail.com:[Gmail]/Spam"))
@@ -339,13 +339,13 @@ passphrase to unlock the Gmail password, and then Gnus will start
 running. You should see something like the following:
 
 ```
-       1: INBOX                                                                                                           
-      22: [Gmail]/All Mail                                                                                                
-     984: [Gmail]/Spam                                                                                                    
-     174: [Gmail]/Trash                                                                                                   
-    7806: [Gmail]/Chats                                                                                                   
-      19: [Gmail]/Important                                                                                               
-*      0: [Gmail]/Starred                                                                                                 
+       1: INBOX
+      22: [Gmail]/All Mail
+     984: [Gmail]/Spam
+     174: [Gmail]/Trash
+    7806: [Gmail]/Chats
+      19: [Gmail]/Important
+*      0: [Gmail]/Starred
 ```
 
 ## Send encrypted mail
@@ -401,7 +401,7 @@ Here you go:
 From: Guest User <kensanata@gmail.com>
 Subject: Testing Gnus Setup
 To: oliof@keybase.io
-Date: Fri, 24 Jul 2015 14:38:53 +0200 (16 minutes, 4 seconds ago)                                                         
+Date: Fri, 24 Jul 2015 14:38:53 +0200 (16 minutes, 4 seconds ago)
 
 Hi Oliof
 
