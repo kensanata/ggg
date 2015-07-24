@@ -17,9 +17,10 @@ by a government
 [Trojan](https://en.wikipedia.org/wiki/Trojan_horse_%28computing%29)
 (malware such as
 [keystroke loggers](https://en.wikipedia.org/wiki/Keystroke_logging) or
-screen loggers). But, defense in depth is important. Every little thing
-help. And it definitely makes mass surveillance much harder and more
-expensive to do.
+screen loggers). But,
+[defense in depth](https://en.wikipedia.org/wiki/Defense_in_depth_%28computing%29)
+is important. Every little thing help. And it definitely makes mass
+surveillance much harder and more expensive to do.
 
 ## Getting a secret key for GPG
 
