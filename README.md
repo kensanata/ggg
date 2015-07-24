@@ -410,3 +410,8 @@ This is a test for my tutorial.
 Cheers
 Alex
 ```
+
+## Further Reading
+
+* [Operational PGP](https://gist.github.com/grugq/03167bed45e774551155)
+* [Creating a new GPG key](http://keyring.debian.org/creating-key.html)
