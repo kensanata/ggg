@@ -372,3 +372,34 @@ Sending...done
 ```
 
 Done!
+
+If you go back to your `*Group*` buffer, you might want to verify that
+the email got sent. Use `3 L` to display all the groups at level three,
+even if they are empty. You should see a group called `[Gmail]/Sent Mail`.
+Enter it, and move to the end. You should see the mail you just wrote:
+
+```
+O. [   ?: -> oliof@keybase.io    ] Testing Gnus Setup
+```
+
+When you enter it, Gnus will ask you: `Decrypt (PGP) part? (y or n)`. If
+you answer correctly, you will see the email you sent. Maybe you'll have
+to provide your passphrase again. The only reason you can read this
+email is because it was encrypted both for the mail recipient (olio) and
+your own key (because of the `mml2015-signers` setting).
+
+Here you go:
+
+```
+From: Guest User <kensanata@gmail.com>
+Subject: Testing Gnus Setup
+To: oliof@keybase.io
+Date: Fri, 24 Jul 2015 14:38:53 +0200 (16 minutes, 4 seconds ago)                                                         
+
+Hi Oliof
+
+This is a test for my tutorial.
+
+Cheers
+Alex
+```
