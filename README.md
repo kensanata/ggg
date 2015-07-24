@@ -43,6 +43,11 @@ gpg: keyring `/Users/Guest/.gnupg/pubring.gpg' created
 gpg: /Users/Guest/.gnupg/trustdb.gpg: trustdb created
 ```
 
+For this example, I did not change any settings in my `gpg.conf`. If
+you're interested in learning more, you might want to read
+[GPG / Mutt / Gmail](https://gist.github.com/bnagy/8914f712f689cc01c267)
+by Ben Nagy.
+
 Let's create our secret key. It will ask us for a *passphrase*. Use a
 good one and don't forget it. All your other passwords will end up being
 protected by this one passphrase.
