@@ -1,9 +1,10 @@
 # Gmail Gnus GPG (GGG)
 
-Sending and receiving encrypted mail using Gmail, Gnus and GPG. I'm
-assuming you know a bit about all the tools involved: Emacs, Gnus,
-Gmail, GPG. My problem has always been putting it all together.
-Hopefully this file helps.
+Sending and receiving encrypted mail using
+[Gmail](https://mail.google.com/), [Gnus](http://www.gnus.org/) and
+[GPG](https://www.gnupg.org/). I'm assuming you know a bit about all the
+tools involved: Emacs, Gnus, Gmail, GPG. My problem has always been
+putting it all together. Hopefully this file helps.
 
 We're going to use Gmail to send and receive encrypted mail. Google is
 doing a good job defending us against criminals. This setup will not
