@@ -3,8 +3,12 @@
 Sending and receiving encrypted mail using
 [Gmail](https://mail.google.com/), [Gnus](http://www.gnus.org/) and
 [GPG](https://www.gnupg.org/). I'm assuming you know a bit about all the
-tools involved: Emacs, Gnus, Gmail, GPG. My problem has always been
-putting it all together. Hopefully this file helps.
+tools involved. Gnus is a mail and news reader that comes with
+[Emacs](https://www.gnu.org/software/emacs/). GPG is actually GnuPG, a
+complete and free implementation of the OpenPGP standard as defined by
+[RFC4880](http://www.ietf.org/rfc/rfc4880.txt) (also known as PGP). My
+problem has always been putting it all together. Hopefully this file
+helps.
 
 We're going to use Gmail to send and receive encrypted mail. Google is
 doing a good job defending us against criminals. This setup will not
@@ -110,13 +114,13 @@ The first hex number is your Key ID. In this case that would be
 
 I like to expire my keys. This simplifies things because I don't have to
 worry about revocation certificates and all that. If you do, you could
-learn by reading
+learn more by reading
 [Creating the perfect GPG keypair](https://alexcabal.com/creating-the-perfect-gpg-keypair/)
 by Alex Cabal.
 
 ## Exchanging public keys with partners
 
-This is what we would send out partners:
+This is what we would send our partners:
 
 ```
 Guest@Megabombus:~$ gpg --export --armor kensanata@gmail.com
