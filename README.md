@@ -245,8 +245,8 @@ This is the content of your new file. Make sure to *change email address
 and password*!
 
 ```
-machine imap.gmail.com login example@gmail.com password thisismysecretpw port 993
-machine smtp.gmail.com login example@gmail.com password thisismysecretpw port 587
+machine imap.gmail.com login kensanata@gmail.com password thisismysecretpw port 993
+machine smtp.gmail.com login kensanata@gmail.com password thisismysecretpw port 587
 ```
 
 When you save the file, Emacs will ask you about the recipients:
@@ -273,7 +273,7 @@ your passphrase. Excellent!
 Gnus is a powerful tool. Originally, it was intended to read news on
 USENET. Then backends were added and now it can read RSS files, mail in
 various formats, and more. We'll use it to access Gmail via IMAP and to
-send Mail via SMTP.
+send mail via SMTP.
 
 When sending your first email from Gnus, you might get a STARTTLS error.
 If you’re using [Homebrew](http://brew.sh/) in Mac OS X, you can install
@@ -282,7 +282,7 @@ the necessary package with `brew install gnutls`.
 We'll keep our settings in a separate `~/.gnus` file. Gnus will read
 this file when it starts.
 
-```
+```elisp
 (setq ;; You need to replace this email address with your own!
       user-mail-address "kensanata@gmail.com"
       ;; You need to replace this key ID with your own key ID!
