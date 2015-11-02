@@ -52,9 +52,21 @@ you're interested in learning more, you might want to read
 [GPG / Mutt / Gmail](https://gist.github.com/bnagy/8914f712f689cc01c267)
 by Ben Nagy.
 
-Let's create our secret key. It will ask us for a *passphrase*. Use a
-good one and don't forget it. All your other passwords will end up being
-protected by this one passphrase.
+Let's create our secret key using ```gpg --gen-key```.
+
+Here's what you want to answer:
+
+1. we want the default kind of key (option 1: RSA and RSA)
+2. we want the largest size (4096 bits)
+3. we want the key to be valid for one year (1y)
+4. we'll provide our name and our email address to identify the key
+5. we'll provide a passphrase
+
+A *passphrase* is like a very long password. Use a good one and don't
+forget it. All your other passwords will end up being protected by
+this one passphrase.
+
+Here's what the entire process will look like:
 
 ```
 Guest@Megabombus:~$ gpg --gen-key
@@ -242,7 +254,7 @@ Guest@Megabombus:~$ emacs ~/.authinfo.gpg
 ```
 
 This is the content of your new file. Make sure to *change email address
-and password*!
+and password!*
 
 ```
 machine imap.gmail.com login kensanata@gmail.com password thisismysecretpw port 993
@@ -393,11 +405,11 @@ Enter it, and move to the end. You should see the mail you just wrote:
 O. [   ?: -> oliof@keybase.io    ] Testing Gnus Setup
 ```
 
-When you enter it, Gnus will ask you: `Decrypt (PGP) part? (y or n)`. If
-you answer correctly, you will see the email you sent. Maybe you'll have
-to provide your passphrase again. The only reason you can read this
-email is because it was encrypted both for the mail recipient (olio) and
-your own key (because of the `mml2015-signers` setting).
+When you enter it, Gnus will ask you: `Decrypt (PGP) part? (y or n)`.
+If you answer correctly, you will see the email you sent. Maybe you'll
+have to provide your passphrase again. The only reason you can read
+this email is because it was encrypted both for the mail recipient
+(oliof) and your own key (because of the `mml2015-signers` setting).
 
 Here you go:
 
