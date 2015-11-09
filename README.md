@@ -1,4 +1,4 @@
-# Gmail Gnus GPG (GGG)
+# Gmail Gnus GPG Guide (GGGG)
 
 Sending and receiving encrypted mail using
 [Gmail](https://mail.google.com/), [Gnus](http://www.gnus.org/) and
