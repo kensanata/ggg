@@ -427,6 +427,21 @@ Cheers
 Alex
 ```
 
+## Troubleshooting
+
+If you installed Emacs for Windows and you're reading an email message
+containing HTML, Gnus will try to render it for you. This uses the
+libxml2 library which doesn't come with the default installation.
+You'll see an empty mail body and Emacs will show "libxml2 library not
+found" in the echo area. This is sad but what are you going to do?
+Install `libxml2`, of course!
+
+The [Emacs README](https://ftp.gnu.org/gnu/emacs/windows/README) tells
+you to install it from Eli Zaretskii's collection [on
+SourceForge](http://sourceforge.net/projects/ezwinports/files/). The
+important part is that the files in its `bin` directory are on your
+`PATH`.
+
 ## Further Reading
 
 * [Operational PGP](https://gist.github.com/grugq/03167bed45e774551155)
