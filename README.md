@@ -463,7 +463,14 @@ You need to download the [PEM](https://sks-keyservers.net/sks-keyservers.netCA.p
 Then download their [signature](https://sks-keyservers.net/sks-keyservers.netCA.pem.asc).
 Verify it!
 
+(If you're on a Mac with `curl` and without `wget`, use `curl --remote-name URL` instead of `wget URL`.)
+
 ```
+Guest@Megabombus:~$ cd .gnupg
+Guest@Megabombus:~/.gnupg$ wget https://sks-keyservers.net/sks-keyservers.netCA.pem
+...
+Guest@Megabombus:~/.gnupg$ wget https://sks-keyservers.net/sks-keyservers.netCA.pem.asc
+...
 Guest@Megabombus:~/.gnupg$ gpg --verify sks-keyservers.netCA.pem.asc 
 gpg: assuming signed data in 'sks-keyservers.netCA.pem'
 gpg: Signature made Fri Sep  5 13:22:25 2014 CEST using RSA key ID 05E136A0
