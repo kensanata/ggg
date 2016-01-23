@@ -488,9 +488,11 @@ gpg: WARNING: Using untrusted key!
 
 Now we can do a little test with a bot!
 
-Export your public key and paste it into an email to `edward-en@fsf.org` with a subject such as "hello bot".
-This first email is not going to be encrypted.
+Export your public key as explained above and paste it into an email to
+`edward-en@fsf.org` with a subject such as "hello bot". This first email
+is not going to be encrypted.
 That's why you need to `<#secure method=pgpmime mode=encrypt>` tag.
+
 You'll get back a reply:
 
 ```
@@ -501,7 +503,8 @@ I received your public key. Thanks.
 - Edward, the friendly GnuPG bot
 ```
 
-Next, retrieve his public key from the keyserver. That's why we needed the keyserver: to get keys of strangers.
+Next, retrieve his public key from the keyserver. That's why we needed
+the keyserver: to get keys of strangers.
 
 ```
 alex@Megabombus:~$ gpg --search edward-en@fsf.org
@@ -527,8 +530,8 @@ gpg: Total number processed: 1
 gpg:               imported: 1  (RSA: 1)
 ```
 
-And now we can send him an email, signed and encrypted. This time we won't be removing the
-`<#secure method=pgpmime mode=encrypt>` tag!
+And now we can send him an email, signed and encrypted. This time we
+won't be removing the `<#secure method=pgpmime mode=encrypt>` tag!
 
 We should get back another reply:
 
