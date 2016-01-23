@@ -442,6 +442,97 @@ SourceForge](http://sourceforge.net/projects/ezwinports/files/). The
 important part is that the files in its `bin` directory are on your
 `PATH`.
 
+## Keyservers
+
+You can install support for keyservers. Modify your `~/.gnupg/gpg.conf`
+and add the following two lines:
+
+```
+keyserver hkps://hkps.pool.sks-keyservers.net
+keyserver-options ca-cert-file=~/.gnupg/sks-keyservers.netCA.pem
+```
+
+I'm also going to "trust" them all, so I've changed this setting:
+
+```
+# More like "Web of Mistrust", amirite??
+trust-model always
+```
+
+You need to download the [PEM](https://sks-keyservers.net/sks-keyservers.netCA.pem) file [from their site](https://sks-keyservers.net/overview-of-pools.php#pool_hkps) and save it in your `~/.gnupg` directory.
+Then download their [signature](https://sks-keyservers.net/sks-keyservers.netCA.pem.asc).
+Verify it!
+
+```
+Guest@Megabombus:~/.gnupg$ gpg --verify sks-keyservers.netCA.pem.asc 
+gpg: assuming signed data in 'sks-keyservers.netCA.pem'
+gpg: Signature made Fri Sep  5 13:22:25 2014 CEST using RSA key ID 05E136A0
+gpg: requesting key 05E136A0 from hkps server hkps.pool.sks-keyservers.net
+gpg: key E3EDFAE3: public key "Kristian Fiskerstrand <kristian.fiskerstrand@sumptuouscapital.com>" imported
+gpg: no need for a trustdb check with `always' trust model
+gpg: Total number processed: 1
+gpg:               imported: 1  (RSA: 1)
+gpg: Good signature from "Kristian Fiskerstrand <kristian.fiskerstrand@sumptuouscapital.com>" [unknown]
+gpg:                 aka "Kristian Fiskerstrand <kf@gnupg.net>" [unknown]
+gpg:                 aka "Kristian Fiskerstrand <k_f@gentoo.org>" [unknown]
+gpg:                 aka "Kristian Fiskerstrand <kf@sumptuouscapital.com>" [unknown]
+gpg: WARNING: Using untrusted key!
+```
+
+Now we can do a little test with a bot!
+
+Export your public key and paste it into an email to `edward-en@fsf.org` with a subject such as "hello bot".
+This first email is not going to be encrypted.
+That's why you need to `<#secure method=pgpmime mode=encrypt>` tag.
+You'll get back a reply:
+
+```
+Hello, I am Edward, the friendly GnuPG bot.
+
+I received your public key. Thanks.
+
+- Edward, the friendly GnuPG bot
+```
+
+Next, retrieve his public key from the keyserver. That's why we needed the keyserver: to get keys of strangers.
+
+```
+alex@Megabombus:~$ gpg --search edward-en@fsf.org
+gpg: searching for "edward-en@fsf.org" from hkps server hkps.pool.sks-keyservers.net
+(1)	Edward the GPG Bot <edward@fsf.org>
+	Edward, the GPG Bot <edward-en@fsf.org>
+	GnuPGボットのEdward <edward-ja@fsf.org>
+	Edward, l'amichevole bot GnuPG <edward-it@fsf.org>
+	Edward, le gentil robot de GnuPG <edward-fr@fsf.org>
+	Edward, el simpático robot GnuPG <edward-es@fsf.org>
+	Edward, o amigo robô de GnuPG <edward-pt-br@fsf.org>
+	Edward, robotul GnuPG cel prietenos <edward-ro@fsf.org>
+	Edward, arkadaş canlısı GnuPG botu <edward-tr@fsf.org>
+	Edward, der freundliche GnuPG Roboter <edward-de@fsf.org>
+	Эдвард, дружелюбный GnuPG бот <edward-ru@fsf.org>
+	Edward, το φιλικό ρομπότ του GnuPG <edward-el@fsf.org
+	  2048 bit RSA key C09A61E8, created: 2014-06-29
+Keys 1-1 of 1 for "edward-en@fsf.org".  Enter number(s), N)ext, or Q)uit > 1
+gpg: requesting key C09A61E8 from hkps server hkps.pool.sks-keyservers.net
+gpg: key C09A61E8: public key "Edward, el simpático robot GnuPG <edward-es@fsf.org>" imported
+gpg: no need for a trustdb check with `always' trust model
+gpg: Total number processed: 1
+gpg:               imported: 1  (RSA: 1)
+```
+
+And now we can send him an email, signed and encrypted. This time we won't be removing the
+`<#secure method=pgpmime mode=encrypt>` tag!
+
+We should get back another reply:
+
+```
+I received your message and decrypted it.
+
+Your signature was verified.
+```
+
+Yay!
+
 ## Further Reading
 
 * [Operational PGP](https://gist.github.com/grugq/03167bed45e774551155)
