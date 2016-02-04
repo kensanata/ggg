@@ -1,9 +1,14 @@
 # Gmail Gnus GPG Guide (GGGG)
 
-Sending and receiving encrypted mail using
+This page is about sending and receiving encrypted mail using
 [Gmail](https://mail.google.com/), [Gnus](http://www.gnus.org/) and
-[GPG](https://www.gnupg.org/). I'm assuming you know a bit about all the
-tools involved. Gnus is a mail and news reader that comes with
+[GPG](https://www.gnupg.org/). If you're just interested in sending
+and receiving encrypted mail, you should probably see [Email
+Self-Defense](https://emailselfdefense.fsf.org/) by the [Free Software
+Foundation](https://www.fsf.org/).
+
+I'm assuming you know a bit about all the tools involved: Gnus is a
+mail and news reader that comes with
 [Emacs](https://www.gnu.org/software/emacs/). GPG is actually GnuPG, a
 complete and free implementation of the OpenPGP standard as defined by
 [RFC4880](http://www.ietf.org/rfc/rfc4880.txt) (also known as PGP). My
