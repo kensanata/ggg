@@ -7,13 +7,13 @@ and receiving encrypted mail, you should probably see [Email
 Self-Defense](https://emailselfdefense.fsf.org/) by the [Free Software
 Foundation](https://www.fsf.org/).
 
-I'm assuming you know a bit about all the tools involved: Gnus is a
-mail and news reader that comes with
-[Emacs](https://www.gnu.org/software/emacs/). GPG is actually GnuPG, a
-complete and free implementation of the OpenPGP standard as defined by
-[RFC4880](http://www.ietf.org/rfc/rfc4880.txt) (also known as PGP). My
-problem has always been putting it all together. Hopefully this file
-helps.
+I'm assuming you know a bit about all the tools involved: **Gmail** is
+Google's email service. **Gnus** is a mail and news reader that comes
+with [Emacs](https://www.gnu.org/software/emacs/). **GPG** is actually
+GnuPG, a complete and free implementation of the OpenPGP standard as
+defined by [RFC4880](http://www.ietf.org/rfc/rfc4880.txt) (also known
+as PGP). My problem has always been putting it all together. Hopefully
+this page will help you do just that.
 
 We're going to use Gmail to send and receive encrypted mail. Google is
 doing a good job defending us against criminals. This setup will not
