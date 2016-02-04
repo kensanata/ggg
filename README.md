@@ -488,10 +488,11 @@ gpg: WARNING: Using untrusted key!
 
 Now we can do a little test with a bot!
 
-Export your public key as explained above and paste it into an email to
-`edward-en@fsf.org` with a subject such as "hello bot". This first email
-is not going to be encrypted.
-That's why you need to `<#secure method=pgpmime mode=encrypt>` tag.
+Export your public key as explained above and paste it into an email
+to `edward-en@fsf.org` with a subject such as "hello bot". This first
+email is not going to be encrypted. That's why you need to *delete*
+the `<#secure method=pgpmime mode=encrypt>` tag. This time only,
+promised!
 
 You'll get back a reply:
 
