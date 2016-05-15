@@ -21,7 +21,7 @@ prevent network analysis from criminal investigators and US spying
 agencies. People will be able to reconstruct who you're communicating
 with because the email senders and recipients are never hidden. This
 setup will also not prevent you and your partners from making mistakes
-such as leaving unencrypted emails lying on your computers. And finally,
+such as leaving unencrypted emails lying on their computers. And finally,
 this setup will also not help you if your computer has been taken over
 by a government
 [Trojan](https://en.wikipedia.org/wiki/Trojan_horse_%28computing%29)
