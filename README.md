@@ -683,7 +683,7 @@ Guest@Megabombus:~$ gpg-agent
 gpg-agent: gpg-agent running and available
 ```
 
-## Using Homebrew to Install GPG
+## Using Homebrew to Install GPG on a Mac
 
 Using [Homebrew](http://brew.sh/):
 
