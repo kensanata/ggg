@@ -57,7 +57,7 @@ you're interested in learning more, you might want to read
 [GPG / Mutt / Gmail](https://gist.github.com/bnagy/8914f712f689cc01c267)
 by Ben Nagy.
 
-Let's create our secret key using ```gpg --gen-key```.
+Let's create our secret key using `gpg --gen-key`.
 
 Here's what you want to answer:
 
@@ -647,7 +647,7 @@ Here's what you should put in your `~/.bashrc` file (this is
 [read by interactive non-login shells](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html#Bash-Startup-Files)
 and usually `~/.bash_profile` sources it as well).
 
-```
+```bash
 # GPG
 function gpg-agent-restart {
     killall gpg-agent
