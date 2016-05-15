@@ -383,7 +383,7 @@ From: Guest User <kensanata@gmail.com>
 <#secure method=pgpmime mode=encrypt>
 Hi Oliof
 
-This is	a test for my tutorial.
+This is a test for my tutorial.
 
 Cheers
 Alex
@@ -513,21 +513,21 @@ Next, retrieve his public key from the keyserver. That's why we needed
 the keyserver: to get keys of strangers.
 
 ```
-alex@Megabombus:~$ gpg --search edward-en@fsf.org
+Guest@Megabombus:~$ gpg --search edward-en@fsf.org
 gpg: searching for "edward-en@fsf.org" from hkps server hkps.pool.sks-keyservers.net
-(1)	Edward the GPG Bot <edward@fsf.org>
-	Edward, the GPG Bot <edward-en@fsf.org>
-	GnuPGボットのEdward <edward-ja@fsf.org>
-	Edward, l'amichevole bot GnuPG <edward-it@fsf.org>
-	Edward, le gentil robot de GnuPG <edward-fr@fsf.org>
-	Edward, el simpático robot GnuPG <edward-es@fsf.org>
-	Edward, o amigo robô de GnuPG <edward-pt-br@fsf.org>
-	Edward, robotul GnuPG cel prietenos <edward-ro@fsf.org>
-	Edward, arkadaş canlısı GnuPG botu <edward-tr@fsf.org>
-	Edward, der freundliche GnuPG Roboter <edward-de@fsf.org>
-	Эдвард, дружелюбный GnuPG бот <edward-ru@fsf.org>
-	Edward, το φιλικό ρομπότ του GnuPG <edward-el@fsf.org
-	  2048 bit RSA key C09A61E8, created: 2014-06-29
+(1) Edward the GPG Bot <edward@fsf.org>
+    Edward, the GPG Bot <edward-en@fsf.org>
+    GnuPGボットのEdward <edward-ja@fsf.org>
+    Edward, l'amichevole bot GnuPG <edward-it@fsf.org>
+    Edward, le gentil robot de GnuPG <edward-fr@fsf.org>
+    Edward, el simpático robot GnuPG <edward-es@fsf.org>
+    Edward, o amigo robô de GnuPG <edward-pt-br@fsf.org>
+    Edward, robotul GnuPG cel prietenos <edward-ro@fsf.org>
+    Edward, arkadaş canlısı GnuPG botu <edward-tr@fsf.org>
+    Edward, der freundliche GnuPG Roboter <edward-de@fsf.org>
+    Эдвард, дружелюбный GnuPG бот <edward-ru@fsf.org>
+    Edward, το φιλικό ρομπότ του GnuPG <edward-el@fsf.org
+      2048 bit RSA key C09A61E8, created: 2014-06-29
 Keys 1-1 of 1 for "edward-en@fsf.org".  Enter number(s), N)ext, or Q)uit > 1
 gpg: requesting key C09A61E8 from hkps server hkps.pool.sks-keyservers.net
 gpg: key C09A61E8: public key "Edward, el simpático robot GnuPG <edward-es@fsf.org>" imported
@@ -548,6 +548,257 @@ Your signature was verified.
 ```
 
 Yay!
+
+## The GPG Agent and Emacs
+
+The GPG Agent is a service that will remember your passphrase for a
+short while. If you don't use it, Gnus will ask you for your
+passphrase for every backend it uses (because it needs to decrypt the
+`~/.authinfo.gpg` file) and for every encrypted mail you read and for
+every encrypted mail you send. You'll be typing your passphrase a lot.
+
+For this to work we need three pieces:
+
+1. we want to start the gpg-agent as soon as possible; it should write
+   its contact information into an environment file
+
+2. we want to contact an existing gpg-agent from the shell using this
+   environment file
+
+3. we want to contact an existing gpg-agent from Emacs using this
+   environment file
+
+I also find that sometimes the agent doesn't work as expected. Perhaps
+the agent died after a while, or Emacs was started before the agent
+was launched, whatever. I need some functions to help me out.
+
+Here's some code for your Emacs init file. It reads the environment
+file, checks whether the gpg-agent still exists, and if it does not,
+it tries to kill any unresponsive instances of the gpg-agent and
+starts a new one, writing a new environment file, and then it reads
+this environment file.
+
+```
+(defun gpg-agent-restart ()
+  "This kills and restarts the gpg-agent.
+
+To kill gpg-agent, we use killall. If you know that the agent is
+OK, you should just reload the environment file using
+`gpg-agent-reload-info'."
+  (interactive)
+  (shell-command "killall gpg-agent")
+  (shell-command "gpg-agent --daemon --enable-ssh-support --write-env-file")
+  ;; read the environment file instead of parsing the output
+  (gpg-agent-reload-info))
+
+(defun gpg-agent-reload-info ()
+  "Reload the ~/.gpg-agent-info file."
+  (interactive)
+  (with-temp-buffer
+    (insert-file (expand-file-name "~/.gpg-agent-info"))
+    (goto-char (point-min))
+    (while (re-search-forward "\\([A-Z_]+\\)=\\(.*\\)" nil t)
+      (setenv (match-string 1) (match-string 2)))))
+
+(defun gpg-agent-startup ()
+  "Initialize the gpg-agent if necessary.
+
+Note that sometimes the gpg-agent can be up and running and still
+be useless, in which case you should restart it using
+`gpg-agent-restart'."
+  (gpg-agent-reload-info)
+  (unless (member (string-to-number (getenv "SSH_AGENT_PID"))
+                  (list-system-processes))
+    (gpg-agent-restart)))
+
+(gpg-agent-startup)
+```
+
+Sometimes setup instructions will tell you how to start the gpg-agent
+for a shell. The contact information is stored in environment
+variables which are exported to child processes. This works if you
+stick to a single terminal. All the processes you start inherit the
+environment and thus they can all contact the gpg-agent you started.
+However, if Emacs is started by a window manager, it does not inherit
+the environment from a shell. That's why we're using an environment
+file.
+
+## The GPG Agent and the Shell
+
+If you want to use GPG from the shell, we repeat the same process
+using a shell script.
+
+Hopefully the gpg-agent was started for you by the operating system.
+This is what you hope to see:
+
+```
+Guest@Megabombus:~$ gpg-agent
+gpg-agent: gpg-agent running and available
+```
+
+If you just installed gpg-agent and it's not active, this is what you'll see:
+
+```
+Guest@Megabombus:~$ gpg-agent
+gpg-agent: no gpg-agent running in this session
+```
+
+Here's what you should put in your `~/.bashrc` file (this is
+[read by interactive non-login shells](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html#Bash-Startup-Files)
+and usually `~/.bash_profile` sources it as well).
+
+```
+# GPG
+function gpg-agent-restart {
+    killall gpg-agent
+    gpg-agent --daemon --enable-ssh-support --write-env-file
+    gpg-agent-reload-info
+}
+
+function gpg-agent-reload-info {
+    source ~/.gpg-agent-info
+    export GPG_AGENT_INFO
+    export SSH_AUTH_SOCK
+    export SSH_AGENT_PID
+}
+
+function gpg-agent-restart {
+    if test -f ~/.gpg-agent-info && \
+            kill -0 `grep GPG_AGENT_INFO $HOME/.gpg-agent-info | cut -d: -f2` 2>/dev/null; then
+        gpg-agent-reload-info
+    else
+        eval `gpg-agent --daemon --write-env-file`
+    fi
+}
+
+gpg-agent-restart
+GPG_TTY=$(tty)
+export GPG_TTY
+```
+
+Hopefully everything is working as intended, now.
+
+```
+Guest@Megabombus:~$ gpg-agent
+gpg-agent: gpg-agent running and available
+```
+
+## Using Homebrew to Install GPG
+
+Using [Homebrew](http://brew.sh/):
+
+```
+brew install gpg2
+brew install gpg-agent
+brew install pinentry-mac
+```
+
+Installing `gpg-agent` tells you to make sure you use
+`use-standard-socket` in your `~/.gnupg/gpg-agent.conf`. This appears
+not to be necessary, however.
+
+### Starting the GPG Agent as a Service on a Mac
+
+If you need the gpg-agent to be available to other applications aside
+from Emacs and the shell, you might want to have it launched when you
+log in.
+
+Note: If you only use GPG from the shell and within Emacs, you don't
+need to this. Skip this section.
+
+First, let's verify that the gpg-agent doesn't run:
+
+```
+Guest@Megabombus:~$ gpg-agent
+-bash: gpg-agent: command not found
+```
+
+Create the file `~/Library/LaunchAgents/org.gnupg.gpg-agent.plist`
+with the following content. Make sure you change my username ("Guest")
+to something else!
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
+   "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>org.gnupg.gpg-agent</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/Users/Guest/bin/start-gpg-agent.sh</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+  </dict>
+</plist>
+```
+
+Now create the shell script `~/bin/startup-gpg-agent.sh` -- create the
+`~/bin` directory if you need to. This shell script must be executable
+(`chmod 700 ~/bin/startup-gpg-agent.sh`). It examines the default
+environment file, and if it finds the file, it
+[checks whether the agent is usable](http://stackoverflow.com/questions/11012527/what-does-kill-0-pid-in-a-shell-script-do).
+If so, we use the file. If not, we start a new agent and tell it to
+write an environment file.
+
+```
+# ${HOME}/.gpg-agent-info is the default filename
+if test -f $HOME/.gpg-agent-info && \
+    kill -0 `grep GPG_AGENT_INFO $HOME/.gpg-agent-info | cut -d: -f2` 2>/dev/null; then
+    # do this in case we were called from the shell
+    . "${HOME}/.gpg-agent-info"
+    export GPG_AGENT_INFO
+    export SSH_AUTH_SOCK
+    export SSH_AGENT_PID
+else
+    eval `/usr/local/bin/gpg-agent --daemon --write-env-file`
+fi
+```
+
+Log out and log back in to check whether you get the correct answer:
+
+```
+Guest@Megabombus:~$ gpg-agent
+gpg-agent: gpg-agent running and available
+```
+
+### Pinentry on a Mac
+
+On a Mac, when decrypting a message using Emacs started from the GUI,
+you'll see a simple, cut off message saying
+`epa-file--find-file-not-found-function: Opening input file:
+Decryption failed,`. Something is wrong!
+
+If you only use Emacs within terminal windows, no problem. No need to
+do anything. Skip this section!
+
+We need to make sure that the agent uses **pinentry for a Mac**. This
+is what I have in my `~/.gnupg/gpg-agent.conf`.
+
+```
+pinentry-program /usr/local/bin/pinentry-mac
+enable-ssh-support
+```
+
+If you don't do that, the default `pinentry` is linked to
+`pinentry-curses` which will work in a terminal but it won't work in
+Emacs!
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────┐
+│ Please enter the passphrase to unlock the secret key for the OpenPGP certificate:  │
+│ "Alex Schroeder <kensanata@gmail.com>"                                             │
+│ 4096-bit RSA key, ID 0EC5C708,                                                     │
+│ created 2015-07-24 (main key ID 7893C0FD).                                         │
+│                                                                                    │
+│                                                                                    │
+│ Passphrase *****************************************************************______ │
+│                                                                                    │
+│            <OK>                                                  <Cancel>          │
+└────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Further Reading
 
