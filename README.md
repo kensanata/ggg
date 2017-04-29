@@ -693,80 +693,32 @@ gpg-agent: gpg-agent running and available
 Using [Homebrew](http://brew.sh/):
 
 ```
-brew install gpg2
-brew install gpg-agent
+brew install gnupg
 brew install pinentry-mac
 ```
 
-Installing `gpg-agent` tells you to make sure you use
-`use-standard-socket` in your `~/.gnupg/gpg-agent.conf`. This appears
-not to be necessary, however.
+### Migrating from GPG 2.0 to GPG 2.1
 
-### Starting the GPG Agent as a Service on a Mac
+The new GPG 2.1 comes with an integrated gpg-agent. It will just work.
 
-If you need the gpg-agent to be available to other applications aside
-from Emacs and the shell, you might want to have it launched when you
-log in.
+Here's what you might have to do, if you followed the advice provided
+in previous releases of this guide.
 
-Note: If you only use GPG from the shell and within Emacs, you don't
-need to this. Skip this section.
-
-First, let's verify that the gpg-agent is not running:
-
-```
-Guest@Megabombus:~$ gpg-agent
-gpg-agent: can't connect to the agent: IPC connect call failed
+```sh
+# switch versions using Homebrew
+brew remove gnupg2 gpg-agent dirmngr
+brew install gnupg
+# if you created these files
+rm ~/Library/LaunchAgents/org.gnupg.gpg-agent.plist
+rm ~/bin/startup-gpg-agent.sh
+# trigger migration
+gpg --list-secret
 ```
 
-Create the file `~/Library/LaunchAgents/org.gnupg.gpg-agent.plist`
-with the following content. Make sure you change my username ("Guest")
-to something else!
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
-   "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-  <dict>
-    <key>Label</key>
-    <string>org.gnupg.gpg-agent</string>
-    <key>ProgramArguments</key>
-    <array>
-      <string>/Users/Guest/bin/start-gpg-agent.sh</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-  </dict>
-</plist>
-```
-
-Now create the shell script `~/bin/startup-gpg-agent.sh` -- create the
-`~/bin` directory if you need to. This shell script must be executable
-(`chmod 700 ~/bin/startup-gpg-agent.sh`). It examines the default
-environment file, and if it finds the file, it
-[checks whether the agent is usable](http://stackoverflow.com/questions/11012527/what-does-kill-0-pid-in-a-shell-script-do).
-If so, we use the file. If not, we start a new agent and tell it to
-write an environment file.
-
-```bash
-# ${HOME}/.gpg-agent-info is the default filename
-if test -f $HOME/.gpg-agent-info && \
-    kill -0 `grep GPG_AGENT_INFO $HOME/.gpg-agent-info | cut -d: -f2` 2>/dev/null; then
-    # do this in case we were called from the shell
-    . "${HOME}/.gpg-agent-info"
-    export GPG_AGENT_INFO
-    export SSH_AUTH_SOCK
-    export SSH_AGENT_PID
-else
-    eval `/usr/local/bin/gpg-agent --daemon --write-env-file`
-fi
-```
-
-Log out and log back in to check whether you get the correct answer:
+I also had to comment the following line in the `~/.gnupg/gpg.conf` file:
 
 ```
-Guest@Megabombus:~$ gpg-agent
-gpg-agent: gpg-agent running and available
+keyserver-options ca-cert-file=~/.gnupg/sks-keyservers.netCA.pem
 ```
 
 ### Pinentry on a Mac
