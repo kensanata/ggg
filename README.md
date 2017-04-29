@@ -579,17 +579,17 @@ starts a new one, writing a new environment file, and then it reads
 this environment file.
 
 ```elisp
-(defun gpg-agent-restart ()
+(defun gpg-restart-agent ()
   "This kills and restarts the gpg-agent.
 
 To kill gpg-agent, we use killall. If you know that the agent is
 OK, you should just reload the environment file using
-`gpg-agent-reload-info'."
+`gpg-reload-agent-info'."
   (interactive)
   (shell-command "killall gpg-agent")
   (shell-command "gpg-agent --daemon --enable-ssh-support --write-env-file")
   ;; read the environment file instead of parsing the output
-  (gpg-agent-reload-info))
+  (gpg-reload-agent-info))
 
 (defun gpg-reload-agent-info ()
   "Reload the ~/.gpg-agent-info file."
@@ -597,7 +597,7 @@ OK, you should just reload the environment file using
   (let ((file (expand-file-name "~/.gpg-agent-info")))
     (when (file-readable-p file)
       (with-temp-buffer
-	(insert-file file)
+	(insert-file-contents file)
 	(goto-char (point-min))
 	(while (re-search-forward "\\([A-Z_]+\\)=\\(.*\\)" nil t)
 	  (setenv (match-string 1) (match-string 2)))))))
@@ -610,7 +610,10 @@ be useless, in which case you should restart it using
 `gpg-restart-agent'."
   (gpg-reload-agent-info)
   (let ((pid (getenv "SSH_AGENT_PID")))
-    (unless (and pid (member (string-to-number pid) (list-system-processes)))
+    (when (and (fboundp 'list-system-processes)
+	       (or (not pid)
+		   (not (member (string-to-number pid)
+				(list-system-processes)))))
       (gpg-restart-agent))))
 
 (gpg-agent-startup)
