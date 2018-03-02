@@ -126,8 +126,27 @@ uid       [ultimate] Alex Schroeder <kensanata@gmail.com>
 sub   4096R/0EC5C708 2015-07-24 [expires: 2016-07-23]
 ```
 
-The first hex number is your Key ID. In this case that would be
-`7893C0FD`. You'll need to remember that.
+The output here lists your Key ID. You need to remember this Key ID.
+We're going to refer to it further down.
+
+Where is the Key ID? Here are the important lines:
+
+```
+pub   4096R/7893C0FD 2015-07-24 [expires: 2016-07-23]
+      Key fingerprint = 1A38 75FD 21ED 85BE 5AC6  BF49 5C1A C924 7893 C0FD
+```
+
+The first line lists the ID `7893C0FD` and the fingerprint ends in the
+same eight characters, `7893 C0FD`. You can reprint this using the
+command `gpg --fingerprint` and an email address. In my case:
+
+```
+Guest@Megabombus:~$ gpg --fingerprint kensanata@gmail.com
+pub   4096R/7893C0FD 2015-07-24 [expires: 2016-07-23]
+      Key fingerprint = 1A38 75FD 21ED 85BE 5AC6  BF49 5C1A C924 7893 C0FD
+uid       [ultimate] Alex Schroeder <kensanata@gmail.com>
+sub   4096R/0EC5C708 2015-07-24 [expires: 2016-07-23]
+```
 
 I like to expire my keys. This simplifies things because I don't have to
 worry about revocation certificates and all that. If you do, you could
