@@ -485,12 +485,12 @@ mail to strangers, however, this section is for you.
 
 Remember how I said that giving people you meet face to face a copy of
 your public key is easy. Well, if you are not too worried then people
-could look up public keys online. A kind of service that allows you to
-search for the public keys of people by name or email address. These
-services exist and they are called keyservers. They even exchange
-information, so all you need to do is tell one of them what your
-public key is and the information will spread to other key servers
-automatically.
+could look up public keys online. This would be a kind of service that
+allows you to search for the public keys of people by name or email
+address. These services exist and they are called keyservers. They
+even exchange information, so all you need to do is tell one of them
+what your public key is and the information will spread to other key
+servers automatically.
 
 Modify your config file is `~/.gnupg/gpg.conf` and it probably already has a line there saying:
 
