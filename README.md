@@ -691,6 +691,28 @@ Guest@Megabombus:~$ keybase pgp pull
 
 With that done, I can send them email using Gnus, Gmail, and GPG. 👍
 
+It behooves us to remember, however, what this means: anybody can now
+look up our crypto friends on Keybase. This is called
+[social network analysis](https://en.wikipedia.org/wiki/Social_network_analysis#Practical_applications).
+Perhaps you don't mind using Keybase with strangers because you can be
+pretty sure that the key belongs to the online persona you know. At
+the same time, perhaps you don't want to be associated with these
+people so instead of following oliof, I might have done this:
+
+```
+Guest@Megabombus:~$ curl -s https://keybase.io/oliof/key.asc | gpg --import
+gpg: key A94BD07E: public key "Harald Wagener <keybase@mausdompteur.de>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1  (RSA: 1)
+```
+
+It works just as well! ✌
+
+Thus:
+
+1. upload and verify your identity, if you want
+2. don't follow anybody, just use the command line to import their keys
+
 ## Troubleshooting
 
 This section is for all the things that might go wrong.
