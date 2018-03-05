@@ -492,7 +492,8 @@ even exchange information, so all you need to do is tell one of them
 what your public key is and the information will spread to other key
 servers automatically.
 
-Modify your config file is `~/.gnupg/gpg.conf` and it probably already has a line there saying:
+Modify your config file is `~/.gnupg/gpg.conf` and it probably already
+has a line there saying:
 
 ```
 keyserver hkp://keys.gnupg.net
