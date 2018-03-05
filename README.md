@@ -42,18 +42,17 @@ surveillance much harder and more expensive to do.
 - [Setting up Gnus for Gmail](#setting-up-gnus-for-gmail)
 - [Run Gnus](#run-gnus)
 - [Send encrypted mail](#send-encrypted-mail)
-- [Windows](#windows)
-- [Keyservers](#keyservers)
-- [The GPG Agent and Emacs](#the-gpg-agent-and-emacs)
-- [The GPG Agent and the Shell](#the-gpg-agent-and-the-shell)
-- [Using Homebrew to Install GPG on a Mac](#using-homebrew-to-install-gpg-on-a-mac)
-	- [Migrating from GPG 2.0 to GPG 2.1](#migrating-from-gpg-20-to-gpg-21)
-	- [Pinentry on a Mac](#pinentry-on-a-mac)
-- [Keybase](#keybase)
+- [Bonus Material](#bonus-material)
+    - [Keyservers](#keyservers)
+    - [Keybase](#keybase)
+- [Troubleshooting](#troubleshooting)
+    - [Windows](#windows)
+    - [Mac](#mac)
+    - [GPG 2.0 and the GPG Agent](#gpg-20-and-the-gpg-agent)
+    - [Migrating from GPG 2.0 to GPG 2.1](#migrating-from-gpg-20-to-gpg-21)
 - [Further Reading](#further-reading)
 
 <!-- markdown-toc end -->
-
 
 ## Getting a secret key for GPG
 
@@ -474,29 +473,42 @@ Cheers
 Alex
 ```
 
-## Windows
+This is it. We're done. Everything else is bonus material.
 
-If you installed Emacs for Windows and you're reading an email message
-containing HTML, Gnus will try to render it for you. This uses the
-libxml2 library which doesn't come with the default installation.
-You'll see an empty mail body and Emacs will show "libxml2 library not
-found" in the echo area. This is sad but what are you going to do?
-Install `libxml2`, of course!
+## Bonus Material
 
-The [Emacs README](https://ftp.gnu.org/gnu/emacs/windows/README) tells
-you to install it from Eli Zaretskii's collection [on
-SourceForge](http://sourceforge.net/projects/ezwinports/files/). The
-important part is that the files in its `bin` directory are on your
-`PATH`.
+This section is not necessarily required if all you want to do is send
+encrypted mail to friends and family. If you want to send encrypted
+mail to strangers, however, this section is for you.
 
-## Keyservers
+### Keyservers
 
-You can install support for keyservers. Modify your `~/.gnupg/gpg.conf`
-and add the following two lines:
+Remember how I said that giving people you meet face to face a copy of
+your public key is easy. Well, if you are not too worried then people
+could look up public keys online. A kind of service that allows you to
+search for the public keys of people by name or email address. These
+services exist and they are called keyservers. They even exchange
+information, so all you need to do is tell one of them what your
+public key is and the information will spread to other key servers
+automatically.
+
+Modify your config file is `~/.gnupg/gpg.conf` and it probably already has a line there saying:
+
+```
+keyserver hkp://keys.gnupg.net
+```
+
+If you want, you can leave it right there. If you want the connection
+from your machine to the key server to be *secured*, this is
+unfortunately not enough. In this case you want the schema to be
+`hkps` instead of `hkp` and that means you need to install a
+certificate. But let's start at the beginning.
+
+Modify your `~/.gnupg/gpg.conf` and replace the existing keyserver
+line with the following line:
 
 ```
 keyserver hkps://hkps.pool.sks-keyservers.net
-keyserver-options ca-cert-file=~/.gnupg/sks-keyservers.netCA.pem
 ```
 
 I'm also going to "trust" them all, so I've changed this setting:
@@ -506,11 +518,21 @@ I'm also going to "trust" them all, so I've changed this setting:
 trust-model always
 ```
 
-You need to download the [PEM](https://sks-keyservers.net/sks-keyservers.netCA.pem) file [from their site](https://sks-keyservers.net/overview-of-pools.php#pool_hkps) and save it in your `~/.gnupg` directory.
-Then download their [signature](https://sks-keyservers.net/sks-keyservers.netCA.pem.asc).
-Verify it!
+If you use the older GPG 2.0, you also need the following line:
 
-(If you're on a Mac with `curl` and without `wget`, use `curl --remote-name URL` instead of `wget URL`.)
+```
+keyserver-options ca-cert-file=~/.gnupg/sks-keyservers.netCA.pem
+```
+
+If you've just added that line you also need to download the
+[PEM](https://sks-keyservers.net/sks-keyservers.netCA.pem)
+file [from their site](https://sks-keyservers.net/overview-of-pools.php#pool_hkps)
+and save it in your `~/.gnupg` directory. Then download their
+[signature](https://sks-keyservers.net/sks-keyservers.netCA.pem.asc)
+and verify it.
+
+(If you're on a Mac with `curl` and without `wget`, use `curl
+--remote-name URL` instead of `wget URL`.)
 
 ```
 Guest@Megabombus:~$ cd .gnupg
@@ -591,215 +613,7 @@ Your signature was verified.
 
 Yay!
 
-## The GPG Agent and Emacs
-
-The GPG Agent is a service that will remember your passphrase for a
-short while. If you don't use it, Gnus will ask you for your
-passphrase for every backend it uses (because it needs to decrypt the
-`~/.authinfo.gpg` file) and for every encrypted mail you read and for
-every encrypted mail you send. You'll be typing your passphrase a lot.
-
-For this to work we need three pieces:
-
-1. we want to start the gpg-agent as soon as possible; it should write
-   its contact information into an environment file
-
-2. we want to contact an existing gpg-agent from the shell using this
-   environment file
-
-3. we want to contact an existing gpg-agent from Emacs using this
-   environment file
-
-I also find that sometimes the agent doesn't work as expected. Perhaps
-the agent died after a while, or Emacs was started before the agent
-was launched, whatever. I need some functions to help me out.
-
-Here's some code for your Emacs init file. It reads the environment
-file, checks whether the gpg-agent still exists, and if it does not,
-it tries to kill any unresponsive instances of the gpg-agent and
-starts a new one, writing a new environment file, and then it reads
-this environment file.
-
-```elisp
-(defun gpg-restart-agent ()
-  "This kills and restarts the gpg-agent.
-
-To kill gpg-agent, we use killall. If you know that the agent is
-OK, you should just reload the environment file using
-`gpg-reload-agent-info'."
-  (interactive)
-  (shell-command "killall gpg-agent")
-  (shell-command "gpg-agent --daemon --enable-ssh-support --write-env-file")
-  ;; read the environment file instead of parsing the output
-  (gpg-reload-agent-info))
-
-(defun gpg-reload-agent-info ()
-  "Reload the ~/.gpg-agent-info file."
-  (interactive)
-  (let ((file (expand-file-name "~/.gpg-agent-info")))
-    (when (file-readable-p file)
-      (with-temp-buffer
-	(insert-file-contents file)
-	(goto-char (point-min))
-	(while (re-search-forward "\\([A-Z_]+\\)=\\(.*\\)" nil t)
-	  (setenv (match-string 1) (match-string 2)))))))
-
-(defun gpg-agent-startup ()
-  "Initialize the gpg-agent if necessary.
-
-Note that sometimes the gpg-agent can be up and running and still
-be useless, in which case you should restart it using
-`gpg-restart-agent'."
-  (gpg-reload-agent-info)
-  (let ((pid (getenv "SSH_AGENT_PID")))
-    (when (and (fboundp 'list-system-processes)
-	       (or (not pid)
-		   (not (member (string-to-number pid)
-				(list-system-processes)))))
-      (gpg-restart-agent))))
-
-(gpg-agent-startup)
-```
-
-Sometimes setup instructions will tell you how to start the gpg-agent
-for a shell. The contact information is stored in environment
-variables which are exported to child processes. This works if you
-stick to a single terminal. All the processes you start inherit the
-environment and thus they can all contact the gpg-agent you started.
-However, if Emacs is started by a window manager, it does not inherit
-the environment from a shell. That's why we're using an environment
-file.
-
-## The GPG Agent and the Shell
-
-If you want to use GPG from the shell, we repeat the same process
-using a shell script.
-
-Hopefully the gpg-agent was started for you by the operating system.
-This is what you hope to see:
-
-```
-Guest@Megabombus:~$ gpg-agent
-gpg-agent: gpg-agent running and available
-```
-
-If you just installed gpg-agent and it's not active, this is what you'll see:
-
-```
-Guest@Megabombus:~$ gpg-agent
-gpg-agent: no gpg-agent running in this session
-```
-
-Here's what you should put in your `~/.bashrc` file (this is
-[read by interactive non-login shells](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html#Bash-Startup-Files)
-and usually `~/.bash_profile` sources it as well).
-
-```bash
-# GPG
-function gpg-agent-restart {
-    killall gpg-agent
-    gpg-agent --daemon --enable-ssh-support --write-env-file
-    gpg-agent-reload-info
-}
-
-function gpg-agent-reload-info {
-    source ~/.gpg-agent-info
-    export GPG_AGENT_INFO
-    export SSH_AUTH_SOCK
-    export SSH_AGENT_PID
-}
-
-function gpg-agent-restart {
-    if test -f ~/.gpg-agent-info && \
-            kill -0 `grep GPG_AGENT_INFO $HOME/.gpg-agent-info | cut -d: -f2` 2>/dev/null; then
-        gpg-agent-reload-info
-    else
-        eval `gpg-agent --daemon --write-env-file`
-    fi
-}
-
-gpg-agent-restart
-GPG_TTY=$(tty)
-export GPG_TTY
-```
-
-Hopefully everything is working as intended, now.
-
-```
-Guest@Megabombus:~$ gpg-agent
-gpg-agent: gpg-agent running and available
-```
-
-## Using Homebrew to Install GPG on a Mac
-
-Using [Homebrew](http://brew.sh/):
-
-```
-brew install gnupg
-brew install pinentry-mac
-```
-
-### Migrating from GPG 2.0 to GPG 2.1
-
-The new GPG 2.1 comes with an integrated gpg-agent. It will just work.
-
-Here's what you might have to do, if you followed the advice provided
-in previous releases of this guide.
-
-```sh
-# switch versions using Homebrew
-brew remove gnupg2 gpg-agent dirmngr
-brew install gnupg
-# if you created these files
-rm ~/Library/LaunchAgents/org.gnupg.gpg-agent.plist
-rm ~/bin/startup-gpg-agent.sh
-# trigger migration
-gpg --list-secret
-```
-
-I also had to comment the following line in the `~/.gnupg/gpg.conf` file:
-
-```
-keyserver-options ca-cert-file=~/.gnupg/sks-keyservers.netCA.pem
-```
-
-### Pinentry on a Mac
-
-On a Mac, when decrypting a message using Emacs started from the GUI,
-you'll see a simple, cut off message saying
-`epa-file--find-file-not-found-function: Opening input file:
-Decryption failed,`. Something is wrong!
-
-If you only use Emacs within terminal windows, no problem. No need to
-do anything. Skip this section!
-
-We need to make sure that the agent uses **pinentry for a Mac**. This
-is what I have in my `~/.gnupg/gpg-agent.conf`.
-
-```
-pinentry-program /usr/local/bin/pinentry-mac
-enable-ssh-support
-```
-
-If you don't do that, the default `pinentry` is linked to
-`pinentry-curses` which will work in a terminal but it won't work in
-Emacs!
-
-```
-┌────────────────────────────────────────────────────────────────────────────────────┐
-│ Please enter the passphrase to unlock the secret key for the OpenPGP certificate:  │
-│ "Alex Schroeder <kensanata@gmail.com>"                                             │
-│ 4096-bit RSA key, ID 0EC5C708,                                                     │
-│ created 2015-07-24 (main key ID 7893C0FD).                                         │
-│                                                                                    │
-│                                                                                    │
-│ Passphrase *****************************************************************______ │
-│                                                                                    │
-│            <OK>                                                  <Cancel>          │
-└────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Keybase
+### Keybase
 
 Remember what I wrote about the *Web of Trust*? More like the *Web Of
 Mistrust*! Why is that? Here's how it works. The basic problem is that
@@ -876,6 +690,238 @@ Guest@Megabombus:~$ keybase pgp pull
 ```
 
 With that done, I can send them email using Gnus, Gmail, and GPG. 👍
+
+## Troubleshooting
+
+This section is for all the things that might go wrong.
+
+### Windows
+
+If you installed Emacs for Windows and you're reading an email message
+containing HTML, Gnus will try to render it for you. This uses the
+libxml2 library which doesn't come with the default installation.
+You'll see an empty mail body and Emacs will show "libxml2 library not
+found" in the echo area. This is sad but what are you going to do?
+Install `libxml2`, of course!
+
+The [Emacs README](https://ftp.gnu.org/gnu/emacs/windows/README) tells
+you to install it from Eli Zaretskii's collection [on
+SourceForge](http://sourceforge.net/projects/ezwinports/files/). The
+important part is that the files in its `bin` directory are on your
+`PATH`.
+
+
+### Mac
+
+I recommend using [Homebrew](http://brew.sh/) to install GPG and
+Pinentry. Pinentry is a little program to allow you to enter a PIN.
+That's the tool used to enter your passphrase if you don't want Emacs
+to handle it for you.
+
+```
+brew install gnupg
+brew install pinentry-mac
+```
+
+On a Mac, when decrypting a message using Emacs started from the GUI,
+you'll see a simple, cut off message saying
+`epa-file--find-file-not-found-function: Opening input file:
+Decryption failed,`. Something is wrong!
+
+If you only use Emacs within terminal windows, no problem. No need to
+do anything. Skip this section!
+
+We need to make sure that the agent uses **pinentry for a Mac**. This
+is what I have in my `~/.gnupg/gpg-agent.conf`.
+
+```
+pinentry-program /usr/local/bin/pinentry-mac
+enable-ssh-support
+```
+
+If you don't do that, the default `pinentry` is linked to
+`pinentry-curses` which will work in a terminal but it won't work in
+Emacs!
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────┐
+│ Please enter the passphrase to unlock the secret key for the OpenPGP certificate:  │
+│ "Alex Schroeder <kensanata@gmail.com>"                                             │
+│ 4096-bit RSA key, ID 0EC5C708,                                                     │
+│ created 2015-07-24 (main key ID 7893C0FD).                                         │
+│                                                                                    │
+│                                                                                    │
+│ Passphrase *****************************************************************______ │
+│                                                                                    │
+│            <OK>                                                  <Cancel>          │
+└────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### GPG 2.0 and the GPG Agent
+
+First: if you use GPG 2.1 or later, you don't need to do anything. It
+starts the GPG Agent automatically. This section will eventually get
+deleted.
+
+What is the GPG Agent? The GPG Agent is a service that will remember
+your passphrase for a short while. If you don't use it, Gnus will ask
+you for your passphrase for every backend it uses (because it needs to
+decrypt the `~/.authinfo.gpg` file) and for every encrypted mail you
+read and for every encrypted mail you send. You'll be typing your
+passphrase a lot.
+
+For this to work with GPG 2.0, we need three pieces:
+
+1. we want to start the gpg-agent as soon as possible; it should write
+   its contact information into an environment file
+
+2. we want to contact an existing gpg-agent from the shell using this
+   environment file
+
+3. we want to contact an existing gpg-agent from Emacs using this
+   environment file
+
+I also find that sometimes the agent doesn't work as expected. Perhaps
+the agent died after a while, or Emacs was started before the agent
+was launched, whatever. I need some functions to help me out.
+
+Here's some code for your Emacs init file. It reads the environment
+file, checks whether the gpg-agent still exists, and if it does not,
+it tries to kill any unresponsive instances of the gpg-agent and
+starts a new one, writing a new environment file, and then it reads
+this environment file.
+
+```elisp
+(defun gpg-restart-agent ()
+  "This kills and restarts the gpg-agent.
+
+To kill gpg-agent, we use killall. If you know that the agent is
+OK, you should just reload the environment file using
+`gpg-reload-agent-info'."
+  (interactive)
+  (shell-command "killall gpg-agent")
+  (shell-command "gpg-agent --daemon --enable-ssh-support --write-env-file")
+  ;; read the environment file instead of parsing the output
+  (gpg-reload-agent-info))
+
+(defun gpg-reload-agent-info ()
+  "Reload the ~/.gpg-agent-info file."
+  (interactive)
+  (let ((file (expand-file-name "~/.gpg-agent-info")))
+    (when (file-readable-p file)
+      (with-temp-buffer
+	(insert-file-contents file)
+	(goto-char (point-min))
+	(while (re-search-forward "\\([A-Z_]+\\)=\\(.*\\)" nil t)
+	  (setenv (match-string 1) (match-string 2)))))))
+
+(defun gpg-agent-startup ()
+  "Initialize the gpg-agent if necessary.
+
+Note that sometimes the gpg-agent can be up and running and still
+be useless, in which case you should restart it using
+`gpg-restart-agent'."
+  (gpg-reload-agent-info)
+  (let ((pid (getenv "SSH_AGENT_PID")))
+    (when (and (fboundp 'list-system-processes)
+	       (or (not pid)
+		   (not (member (string-to-number pid)
+				(list-system-processes)))))
+      (gpg-restart-agent))))
+
+(gpg-agent-startup)
+```
+
+Sometimes setup instructions will tell you how to start the gpg-agent
+for a shell. The contact information is stored in environment
+variables which are exported to child processes. This works if you
+stick to a single terminal. All the processes you start inherit the
+environment and thus they can all contact the gpg-agent you started.
+However, if Emacs is started by a window manager, it does not inherit
+the environment from a shell. That's why we're using an environment
+file.
+
+If you want to use GPG from the shell, we repeat the same process
+using a shell script.
+
+Hopefully the gpg-agent was started for you by the operating system.
+This is what you hope to see:
+
+```
+Guest@Megabombus:~$ gpg-agent
+gpg-agent: gpg-agent running and available
+```
+
+If you just installed gpg-agent and it's not active, this is what you'll see:
+
+```
+Guest@Megabombus:~$ gpg-agent
+gpg-agent: no gpg-agent running in this session
+```
+
+Here's what you should put in your `~/.bashrc` file (this is
+[read by interactive non-login shells](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html#Bash-Startup-Files)
+and usually `~/.bash_profile` sources it as well).
+
+```bash
+# GPG
+function gpg-agent-restart {
+    killall gpg-agent
+    gpg-agent --daemon --enable-ssh-support --write-env-file
+    gpg-agent-reload-info
+}
+
+function gpg-agent-reload-info {
+    source ~/.gpg-agent-info
+    export GPG_AGENT_INFO
+    export SSH_AUTH_SOCK
+    export SSH_AGENT_PID
+}
+
+function gpg-agent-restart {
+    if test -f ~/.gpg-agent-info && \
+            kill -0 `grep GPG_AGENT_INFO $HOME/.gpg-agent-info | cut -d: -f2` 2>/dev/null; then
+        gpg-agent-reload-info
+    else
+        eval `gpg-agent --daemon --write-env-file`
+    fi
+}
+
+gpg-agent-restart
+GPG_TTY=$(tty)
+export GPG_TTY
+```
+
+Hopefully everything is working as intended, now.
+
+```
+Guest@Megabombus:~$ gpg-agent
+gpg-agent: gpg-agent running and available
+```
+
+### Migrating from GPG 2.0 to GPG 2.1
+
+The new GPG 2.1 comes with an integrated gpg-agent. It will just work.
+
+Here's what you might have to do, if you followed the advice provided
+in previous releases of this guide.
+
+```sh
+# switch versions using Homebrew
+brew remove gnupg2 gpg-agent dirmngr
+brew install gnupg
+# if you created these files
+rm ~/Library/LaunchAgents/org.gnupg.gpg-agent.plist
+rm ~/bin/startup-gpg-agent.sh
+# trigger migration
+gpg --list-secret
+```
+
+I also had to comment the following line in the `~/.gnupg/gpg.conf` file:
+
+```
+keyserver-options ca-cert-file=~/.gnupg/sks-keyservers.netCA.pem
+```
 
 ## Further Reading
 
