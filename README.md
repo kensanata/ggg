@@ -856,5 +856,9 @@ With that done, I can send them email using Gnus, Gmail, and GPG. 👍
 
 ## Further Reading
 
+* [Encrypting and decrypting documents](https://www.gnupg.org/gph/en/manual/x110.html),
+  in *The GNU Privacy Handbook*
+* [Making and verifying signatures](https://www.gnupg.org/gph/en/manual/x135.html),
+  also in *The GNU Privacy Handbook*
 * [Operational PGP](https://gist.github.com/grugq/03167bed45e774551155)
 * [Creating a new GPG key](http://keyring.debian.org/creating-key.html)
