@@ -706,7 +706,7 @@ gpg: Total number processed: 1
 gpg:               imported: 1  (RSA: 1)
 ```
 
-It works just as well! ✌
+It works just as well! 👍👍
 
 Thus:
 
