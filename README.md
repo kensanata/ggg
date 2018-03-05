@@ -32,6 +32,29 @@ screen loggers). But,
 is important. Every little thing helps. And it definitely makes mass
 surveillance much harder and more expensive to do.
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [Getting a secret key for GPG](#getting-a-secret-key-for-gpg)
+- [Exchanging public keys with partners](#exchanging-public-keys-with-partners)
+- [Getting a password for Gmail](#getting-a-password-for-gmail)
+- [Storing your Gmail password for Gnus, using GPG to encrypt it](#storing-your-gmail-password-for-gnus-using-gpg-to-encrypt-it)
+- [Setting up Gnus for Gmail](#setting-up-gnus-for-gmail)
+- [Run Gnus](#run-gnus)
+- [Send encrypted mail](#send-encrypted-mail)
+- [Windows](#windows)
+- [Keyservers](#keyservers)
+- [The GPG Agent and Emacs](#the-gpg-agent-and-emacs)
+- [The GPG Agent and the Shell](#the-gpg-agent-and-the-shell)
+- [Using Homebrew to Install GPG on a Mac](#using-homebrew-to-install-gpg-on-a-mac)
+	- [Migrating from GPG 2.0 to GPG 2.1](#migrating-from-gpg-20-to-gpg-21)
+	- [Pinentry on a Mac](#pinentry-on-a-mac)
+- [Keybase](#keybase)
+- [Further Reading](#further-reading)
+
+<!-- markdown-toc end -->
+
+
 ## Getting a secret key for GPG
 
 We'll generate a new secret key using GPG. A secret key is like your
