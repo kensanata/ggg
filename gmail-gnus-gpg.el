@@ -7,14 +7,14 @@
 ;; See the README.md file for more information. This file could by your
 ;; ~/.gnus file, or you could pull it into your ~/.emacs file. Be sure
 ;; to change the `user-mail-address' and the key id in
-;; `mml2015-signers'.
+;; `mml-secure-openpgp-signers'.
 
 ;; Code:
 
 (setq ;; You need to replace this email address with your own!
       user-mail-address "kensanata@gmail.com"
       ;; You need to replace this key ID with your own key ID!
-      mml2015-signers '("7893C0FD")
+      mml-secure-openpgp-signers '("7893C0FD")
       ;; This tells Gnus to get email from Gmail via IMAP.
       gnus-select-method
       '(nnimap "gmail"
