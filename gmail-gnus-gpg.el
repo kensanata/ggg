@@ -28,8 +28,6 @@
       smtpmail-smtp-service 587
       ;; Tell message mode to use SMTP.
       message-send-mail-function 'smtpmail-send-it
-      ;; This is where we store the password.
-      nntp-authinfo-file "~/.authinfo.gpg"
       ;; Gmail system labels have the prefix [Gmail], which matches
       ;; the default value of gnus-ignored-newsgroups. That's why we
       ;; redefine it.
