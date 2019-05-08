@@ -344,7 +344,7 @@ this file when it starts.
 (setq ;; You need to replace this email address with your own!
       user-mail-address "kensanata@gmail.com"
       ;; You need to replace this key ID with your own key ID!
-      mml2015-signers '("7893C0FD")
+      mml-secure-openpgp-signers '("7893C0FD")
       ;; This tells Gnus to get email from Gmail via IMAP.
       gnus-select-method
       '(nnimap "gmail"
@@ -358,8 +358,6 @@ this file when it starts.
       smtpmail-smtp-service 587
       ;; Tell message mode to use SMTP.
       message-send-mail-function 'smtpmail-send-it
-      ;; This is where we store the password.
-      nntp-authinfo-file "~/.authinfo.gpg"
       ;; Gmail system labels have the prefix [Gmail], which matches
       ;; the default value of gnus-ignored-newsgroups. That's why we
       ;; redefine it.
@@ -369,7 +367,7 @@ this file when it starts.
       ;; We don't want local, unencrypted copies of emails we write.
       gnus-message-archive-group nil
       ;; We want to be able to read the emails we wrote.
-      mml2015-encrypt-to-self t)
+      mml-secure-openpgp-encrypt-to-self t)
 
 ;; Attempt to encrypt all the mails we'll be sending.
 (add-hook 'message-setup-hook 'mml-secure-message-encrypt)
