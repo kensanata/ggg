@@ -37,7 +37,7 @@
       ;; We don't want local, unencrypted copies of emails we write.
       gnus-message-archive-group nil
       ;; We want to be able to read the emails we wrote.
-      mml2015-encrypt-to-self t)
+      mml-secure-openpgp-encrypt-to-self t)
 
 ;; Attempt to encrypt all the mails we'll be sending.
 (add-hook 'message-setup-hook 'mml-secure-message-encrypt)
