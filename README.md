@@ -84,7 +84,7 @@ Let's create our secret key using `gpg --gen-key`.
 Here's what you want to answer:
 
 1. we want the default kind of key (option 1: RSA and RSA)
-2. we want the largest size (4096 bits)
+2. we want the largest size (4096 bits, but [feel free to use 2048](https://www.gnupg.org/faq/gnupg-faq.html#default_rsa2048))
 3. we want the key to be valid for one year (1y)
 4. we'll provide our name and our email address to identify the key
 5. we'll provide a passphrase
