@@ -497,8 +497,7 @@ keyserver hkp://keys.gnupg.net
 If you want, you can leave it right there. If you want the connection
 from your machine to the key server to be *secured*, this is
 unfortunately not enough. In this case you want the schema to be
-`hkps` instead of `hkp` and that means you need to install a
-certificate. But let's start at the beginning.
+`hkps` instead of `hkp`.
 
 Modify your `~/.gnupg/gpg.conf` and replace the existing keyserver
 line with the following line:
