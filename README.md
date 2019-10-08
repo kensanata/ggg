@@ -485,10 +485,7 @@ Remember how I said that giving people you meet face to face a copy of
 your public key is easy. Well, if you are not too worried then people
 could look up public keys online. This would be a kind of service that
 allows you to search for the public keys of people by name or email
-address. These services exist and they are called keyservers. They
-even exchange information, so all you need to do is tell one of them
-what your public key is and the information will spread to other key
-servers automatically.
+address. These services exist and they are called keyservers.
 
 Modify your config file is `~/.gnupg/gpg.conf` and it probably already
 has a line there saying:
@@ -507,7 +504,7 @@ Modify your `~/.gnupg/gpg.conf` and replace the existing keyserver
 line with the following line:
 
 ```
-keyserver hkps://hkps.pool.sks-keyservers.net
+keyserver hkps://keys.openpgp.org
 ```
 
 I'm also going to "trust" them all, so I've changed this setting:
@@ -515,43 +512,6 @@ I'm also going to "trust" them all, so I've changed this setting:
 ```
 # More like "Web of Mistrust", amirite??
 trust-model always
-```
-
-If you use the older GPG 2.0, you also need the following line:
-
-```
-keyserver-options ca-cert-file=~/.gnupg/sks-keyservers.netCA.pem
-```
-
-If you've just added that line you also need to download the
-[PEM](https://sks-keyservers.net/sks-keyservers.netCA.pem)
-file [from their site](https://sks-keyservers.net/overview-of-pools.php#pool_hkps)
-and save it in your `~/.gnupg` directory. Then download their
-[signature](https://sks-keyservers.net/sks-keyservers.netCA.pem.asc)
-and verify it.
-
-(If you're on a Mac with `curl` and without `wget`, use `curl
---remote-name URL` instead of `wget URL`.)
-
-```
-Guest@Megabombus:~$ cd .gnupg
-Guest@Megabombus:~/.gnupg$ wget https://sks-keyservers.net/sks-keyservers.netCA.pem
-...
-Guest@Megabombus:~/.gnupg$ wget https://sks-keyservers.net/sks-keyservers.netCA.pem.asc
-...
-Guest@Megabombus:~/.gnupg$ gpg --verify sks-keyservers.netCA.pem.asc 
-gpg: assuming signed data in 'sks-keyservers.netCA.pem'
-gpg: Signature made Fri Sep  5 13:22:25 2014 CEST using RSA key ID 05E136A0
-gpg: requesting key 05E136A0 from hkps server hkps.pool.sks-keyservers.net
-gpg: key E3EDFAE3: public key "Kristian Fiskerstrand <kristian.fiskerstrand@sumptuouscapital.com>" imported
-gpg: no need for a trustdb check with `always' trust model
-gpg: Total number processed: 1
-gpg:               imported: 1  (RSA: 1)
-gpg: Good signature from "Kristian Fiskerstrand <kristian.fiskerstrand@sumptuouscapital.com>" [unknown]
-gpg:                 aka "Kristian Fiskerstrand <kf@gnupg.net>" [unknown]
-gpg:                 aka "Kristian Fiskerstrand <k_f@gentoo.org>" [unknown]
-gpg:                 aka "Kristian Fiskerstrand <kf@sumptuouscapital.com>" [unknown]
-gpg: WARNING: Using untrusted key!
 ```
 
 Now we can do a little test with a bot!
