@@ -45,6 +45,7 @@ surveillance much harder and more expensive to do.
 - [Bonus Material](#bonus-material)
     - [Keyservers](#keyservers)
     - [Keybase](#keybase)
+    - [Web Key Directory](#web-key-directory)
 - [Troubleshooting](#troubleshooting)
     - [Windows](#windows)
     - [Mac](#mac)
@@ -582,7 +583,7 @@ a
 [Man-in-the-Middle Attack](https://en.wikipedia.org/wiki/Man-in-the-middle_attack).
 
 The *Web of Trust* solution is this: If there's a chain of people that
-trust each other, and are willingt to prove it using electronic
+trust each other, and are willing to prove it using electronic
 signatures, then me and you don't need to meet in person. I trust B, B
 trusts C, C trusts you, and since we all went to key signing parties
 and signed each other's keys, C signing your key, B signing C's key,
@@ -593,7 +594,7 @@ and not a key by the ominous man in the middle.
 If you're like me, however, then you're not going to key signing
 parties and most of your friends don't sign keys, and you don't trust
 yourself to actually verify official looking documents presented to
-you by strangers, so it all falls appart.
+you by strangers, so it all falls apart.
 Enter [Keybase](https://keybase.io/).
 
 If I know you via some social media such as Facebook or Twitter, and I
@@ -602,7 +603,7 @@ able to verify whether the key I have actually belongs to you. It's
 not great, but it certainly beats no checking at all, which is what
 happens when nobody ever goes to these key signing parties.
 
-Here's how it would work. We have a keybase account and our friend has
+Here's how it would work. We have a Keybase account and our friend has
 a keybase account. We already logged in and provided some identity of
 our own. You can read about that on the Keybase website. I'm only
 going to talk about the GPG interaction.
@@ -649,7 +650,7 @@ Guest@Megabombus:~$ keybase pgp pull
 
 With that done, I can send them email using Gnus, Gmail, and GPG. 👍
 
-It behooves us to remember, however, what this means: anybody can now
+It behoves us to remember, however, what this means: anybody can now
 look up our crypto friends on Keybase. This is called
 [social network analysis](https://en.wikipedia.org/wiki/Social_network_analysis#Practical_applications).
 Perhaps you don't mind using Keybase with strangers because you can be
@@ -670,6 +671,18 @@ Thus:
 
 1. upload and verify your identity, if you want
 2. don't follow anybody, just use the command line to import their keys
+
+### Web Key Directory
+
+If you add the following to `~/.gnupg/gpg.conf`, gpg tries to get the
+key not only from the keyserver but also via Web Key Directory (WKD):
+
+```
+auto-key-locate local,keyserver,wkd
+```
+
+If you check the [WKD wiki page](https://wiki.gnupg.org/WKD), you'll
+see that not many organisations are using it. Perhaps one day!
 
 ## Troubleshooting
 
