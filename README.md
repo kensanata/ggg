@@ -504,7 +504,7 @@ Modify your `~/.gnupg/gpg.conf` and replace the existing keyserver
 line with the following line:
 
 ```
-keyserver hkps://keys.openpgp.org
+keyserver hkps://keys.gnupg.net
 ```
 
 I'm also going to "trust" them all, so I've changed this setting:
@@ -514,7 +514,11 @@ I'm also going to "trust" them all, so I've changed this setting:
 trust-model always
 ```
 
-Now we can do a little test with a bot!
+### Testing
+
+Now we can do a little test with a bot! This is based on the [Email
+Self-Defense](https://emailselfdefense.fsf.org/) site by the *Free
+Software Foundation*.
 
 Export your public key as explained above and paste it into an email
 to `edward-en@fsf.org` with a subject such as "hello bot". This first
