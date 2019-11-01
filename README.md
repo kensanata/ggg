@@ -44,6 +44,7 @@ surveillance much harder and more expensive to do.
 - [Send encrypted mail](#send-encrypted-mail)
 - [Bonus Material](#bonus-material)
     - [Keyservers](#keyservers)
+    - [Testing](#testing)
     - [Keybase](#keybase)
     - [Web Key Directory](#web-key-directory)
 - [Troubleshooting](#troubleshooting)
