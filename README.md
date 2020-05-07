@@ -67,12 +67,10 @@ your home directory.
 Here's what an initial run of gpg looks like:
 
 ```
-Guest@Megabombus:~$ gpg --list-keys
-gpg: directory `/Users/Guest/.gnupg' created
-gpg: new configuration file `/Users/Guest/.gnupg/gpg.conf' created
-gpg: WARNING: options in `/Users/Guest/.gnupg/gpg.conf' are not yet active during this run
-gpg: keyring `/Users/Guest/.gnupg/pubring.gpg' created
-gpg: /Users/Guest/.gnupg/trustdb.gpg: trustdb created
+guest@melanobombus:~$ gpg --list-keys
+gpg: directory '/home/guest/.gnupg' created
+gpg: keybox '/home/guest/.gnupg/pubring.kbx' created
+gpg: /home/guest/.gnupg/trustdb.gpg: trustdb created
 ```
 
 For this example, I did not change any settings in my `gpg.conf`. If
@@ -84,91 +82,58 @@ Let's create our secret key using `gpg --gen-key`.
 
 Here's what you want to answer:
 
-1. we want the default kind of key (option 1: RSA and RSA)
-2. we want the largest size (4096 bits, but [feel free to use 2048](https://www.gnupg.org/faq/gnupg-faq.html#default_rsa2048))
-3. we want the key to be valid for one year (1y)
-4. we'll provide our name and our email address to identify the key
-5. we'll provide a passphrase
+1. a name
+2. an email address
+5. a passphrase
 
 A *passphrase* is like a very long password. Use a good one and don't
 forget it. All your other passwords will end up being protected by
 this one passphrase.
 
-Here's what the entire process will look like:
+Here's what the entire process looks like:
 
 ```
-Guest@Megabombus:~$ gpg --gen-key
-gpg (GnuPG/MacGPG2) 2.0.27; Copyright (C) 2015 Free Software Foundation, Inc.
+guest@melanobombus:~$ gpg --gen-key
+gpg (GnuPG) 2.2.12; Copyright (C) 2018 Free Software Foundation, Inc.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
-Please select what kind of key you want:
-   (1) RSA and RSA (default)
-   (2) DSA and Elgamal
-   (3) DSA (sign only)
-   (4) RSA (sign only)
-Your selection? 1
-RSA keys may be between 1024 and 4096 bits long.
-What keysize do you want? (2048) 4096
-Requested keysize is 4096 bits
-Please specify how long the key should be valid.
-         0 = key does not expire
-      <n>  = key expires in n days
-      <n>w = key expires in n weeks
-      <n>m = key expires in n months
-      <n>y = key expires in n years
-Key is valid for? (0) 1y
-Key expires at Sat Jul 23 10:15:55 2016 CEST
-Is this correct? (y/N) y
+Note: Use "gpg --full-generate-key" for a full featured key generation dialog.
 
 GnuPG needs to construct a user ID to identify your key.
 
 Real name: Alex Schroeder
-Email address: kensanata@gmail.com
-Comment:
+Email address: alex@gnu.org
 You selected this USER-ID:
-    "Alex Schroeder <kensanata@gmail.com>"
+    "Alex Schroeder <alex@gnu.org>"
 
-Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
-You need a Passphrase to protect your secret key.
-
+Change (N)ame, (E)mail, or (O)kay/(Q)uit? o
 We need to generate a lot of random bytes. It is a good idea to perform
 some other action (type on the keyboard, move the mouse, utilize the
 disks) during the prime generation; this gives the random number
 generator a better chance to gain enough entropy.
-gpg: key 7893C0FD marked as ultimately trusted
+gpg: key AE495BC63253DDE8 marked as ultimately trusted
+gpg: directory '/home/guest/.gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/home/guest/.gnupg/openpgp-revocs.d/ABEF08C34DB4DB8A73EBBBB8AE495BC63253DDE8.rev'
 public and secret key created and signed.
 
-gpg: checking the trustdb
-gpg: 3 marginal(s) needed, 1 complete(s) needed, PGP trust model
-gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
-gpg: next trustdb check due at 2016-07-23
-pub   4096R/7893C0FD 2015-07-24 [expires: 2016-07-23]
-      Key fingerprint = 1A38 75FD 21ED 85BE 5AC6  BF49 5C1A C924 7893 C0FD
-uid       [ultimate] Alex Schroeder <kensanata@gmail.com>
-sub   4096R/0EC5C708 2015-07-24 [expires: 2016-07-23]
+pub   rsa3072 2020-05-07 [SC] [expires: 2022-05-07]
+      ABEF08C34DB4DB8A73EBBBB8AE495BC63253DDE8
+uid                      Alex Schroeder <alex@gnu.org>
+sub   rsa3072 2020-05-07 [E] [expires: 2022-05-07]
 ```
 
-The output here lists your Key ID. You need to remember this Key ID.
-We're going to refer to it further down.
-
-Where is the Key ID? Here are the important lines:
-
-```
-pub   4096R/7893C0FD 2015-07-24 [expires: 2016-07-23]
-      Key fingerprint = 1A38 75FD 21ED 85BE 5AC6  BF49 5C1A C924 7893 C0FD
-```
-
-The first line lists the ID `7893C0FD` and the fingerprint ends in the
-same eight characters, `7893 C0FD`. You can reprint this using the
+The output here lists your fingerprint. You can reprint this using the
 command `gpg --fingerprint` and an email address. In my case:
 
 ```
-Guest@Megabombus:~$ gpg --fingerprint kensanata@gmail.com
-pub   4096R/7893C0FD 2015-07-24 [expires: 2016-07-23]
-      Key fingerprint = 1A38 75FD 21ED 85BE 5AC6  BF49 5C1A C924 7893 C0FD
-uid       [ultimate] Alex Schroeder <kensanata@gmail.com>
-sub   4096R/0EC5C708 2015-07-24 [expires: 2016-07-23]
+guest@melanobombus:~$ gpg --fingerprint
+/home/guest/.gnupg/pubring.kbx
+------------------------------
+pub   rsa3072 2020-05-07 [SC] [expires: 2022-05-07]
+      ABEF 08C3 4DB4 DB8A 73EB  BBB8 AE49 5BC6 3253 DDE8
+uid           [ultimate] Alex Schroeder <alex@gnu.org>
+sub   rsa3072 2020-05-07 [E] [expires: 2022-05-07]
 ```
 
 I like to expire my keys. This simplifies things because I don't have to
@@ -177,74 +142,74 @@ learn more by reading
 [Creating the perfect GPG keypair](https://alexcabal.com/creating-the-perfect-gpg-keypair/)
 by Alex Cabal.
 
+Also note that the message told you about a revocation certificate it
+created. If you keep it somewhere safe, you'll be able to tell other
+people that your key got compromised and that it shouldn't be used
+anymore, in a cryptographically secure manner. This assumes that your
+enemies might be trying to spoof your friends, telling them that you
+switched keys when in fact you haven't. The revocation certificate is
+how you tell them you *are* switching keys!
+
+Usually, you don't have to do that. Instead, you'll *extend* your key,
+moving the expiration day up a year or two.
+
 ## Exchanging public keys with partners
 
 This is what we would send our partners:
 
 ```
-Guest@Megabombus:~$ gpg --export --armor kensanata@gmail.com
+guest@melanobombus:~$ gpg --export --armor alex@gnu.org
 -----BEGIN PGP PUBLIC KEY BLOCK-----
-Comment: GPGTools - https://gpgtools.org
 
-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
-HU096ZFYc0U5vz6d5BY=
-=uIuY
+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
+5BklAoTR0s26VD63cQSIKLwt0V+u
+=hQcc
 -----END PGP PUBLIC KEY BLOCK-----
 ```
 
 They would save this block in a file such as `alex.pub` and import it.
-Here, I got a public key from a friend called "oliof" and imported it.
+Here, I got a public key from a friend and imported it.
 
 ```
-Guest@Megabombus:~$ gpg --import oliof.pub
-gpg: key 5F871B02: public key "keybase.io/oliof <oliof@keybase.io>" imported
+guest@melanobombus:~$ gpg --import roland.pub 
+gpg: key A5E1F208237B14BE: public key "Roland Li <roland@li.name>" imported
 gpg: Total number processed: 1
-gpg:               imported: 1  (RSA: 1)
+gpg:               imported: 1
 ```
 
 If you meet your partners face to face, giving them a copy of your
@@ -256,16 +221,53 @@ channels. Attackers would have to replace these fingerprints everywhere.
 It's not perfect, but it's much better than nothing.
 
 ```
-Guest@Megabombus:~$ gpg --fingerprint kensanata@gmail.com
-pub   4096R/7893C0FD 2015-07-24 [expires: 2016-07-23]
-      Key fingerprint = 1A38 75FD 21ED 85BE 5AC6  BF49 5C1A C924 7893 C0FD
-uid       [ultimate] Alex Schroeder <kensanata@gmail.com>
-sub   4096R/0EC5C708 2015-07-24 [expires: 2016-07-23]
+guest@melanobombus:~$ gpg --fingerprint alex@gnu.org
+pub   rsa3072 2020-05-07 [SC] [expires: 2022-05-07]
+      ABEF 08C3 4DB4 DB8A 73EB  BBB8 AE49 5BC6 3253 DDE8
+uid           [ultimate] Alex Schroeder <alex@gnu.org>
+sub   rsa3072 2020-05-07 [E] [expires: 2022-05-07]
 ```
 
-The fingerprint is right here: `1A38 75FD 21ED 85BE 5AC6 BF49 5C1A C924
-7893 C0FD`. Put it on your web page, in your email signatures, tweet it,
-and so on.
+The fingerprint is right here: `ABEF 08C3 4DB4 DB8A 73EB BBB8 AE49
+5BC6 3253 DDE8`. Put it on your web page, in your email signatures,
+tweet it, and so on.
+
+## Encrypting a file
+
+Let's encrypt a file before we get started. Use Emacs to create a text
+file and save it as `message.txt`. Use `M-x epa-encrypt-file` to
+encrypt the file. You'll see a buffer where you can tell Emacs who the
+recipients are:
+
+```
+Select recipients for encryption.
+If no one is selected, symmetric encryption will be performed.
+- ‘m’ to mark a key on the line
+- ‘u’ to unmark a key on the line
+[Cancel][OK]
+
+  u AE495BC63253DDE8 Alex Schroeder <alex@gnu.org>
+  - A5E1F208237B14BE Roland Li <roland@li.name>
+```
+
+These are the people GPG knows about: the key you created and the key
+you imported. Hopefully you will be adding many more.
+
+Move the line marked with the `u`. This is the key with "ultimate
+trust", your own.
+
+Use `m` to mark both your key and Roland's key and press `RET` on the
+OK button. GPG will tell you that there's no way to know that this key
+does in fact belong to the person it claims to belong to, but what are
+you going to do? Use it anyway.
+
+Now, you'll have an encrypted file called `message.txt.gpg` next to
+the unencrypted `message.txt` file and both you and Roland can decrypt
+it. Note that if you didn't mark your own key, then you would not be
+able to read the encrypted file.
+
+Don't name your file for the things you're talking about or you'll be
+giving away important information.
 
 ## Getting a password for Gmail
 
@@ -295,7 +297,7 @@ the passphrase for your GPG key!
 Edit the file:
 
 ```
-Guest@Megabombus:~$ emacs ~/.authinfo.gpg
+guest@melanobombus:~$ emacs ~/.authinfo.gpg
 ```
 
 This is the content of your new file. Make sure to *change email address
@@ -311,16 +313,17 @@ When you save the file, Emacs will ask you about the recipients:
 ```
 Select recipients for encryption.
 If no one is selected, symmetric encryption will be performed.
-- `m' to mark a key on the line
-- `u' to unmark a key on the line
+- ‘m’ to mark a key on the line
+- ‘u’ to unmark a key on the line
 [Cancel][OK]
 
-  u 5C1AC9247893C0FD Alex Schroeder <kensanata@gmail.com>
-  - FF13FA295F871B02 keybase.io/oliof <oliof@keybase.io>
+  u AE495BC63253DDE8 Alex Schroeder <alex@gnu.org>
+  - A5E1F208237B14BE Roland Li <roland@li.name>
 ```
 
-Move the line marked with the `u`. This is the key with "ultimate trust"
--- your own. Hit `m` and tab to the `[OK]` button, hit Enter.
+Move the line marked with the `u`. This is the key with "ultimate
+trust", your own. Hit `m` and tab to the `[OK]` button, hit Enter.
+Only you will be able to read the file.
 
 If you exit Emacs and try to open the file again, you'll be asked for
 your passphrase. Excellent!
@@ -341,9 +344,9 @@ this file when it starts.
 
 ```elisp
 (setq ;; You need to replace this email address with your own!
-      user-mail-address "kensanata@gmail.com"
+      user-mail-address "alex@gnu.org"
       ;; You need to replace this key ID with your own key ID!
-      mml-secure-openpgp-signers '("7893C0FD")
+      mml-secure-openpgp-signers '("AE495BC63253DDE8")
       ;; This tells Gnus to get email from Gmail via IMAP.
       gnus-select-method
       '(nnimap "gmail"
@@ -414,12 +417,12 @@ buffer. The tag `<#secure method=pgpmime mode=encrypt>` makes sure that
 Emacs will encrypt the mail before sending it.
 
 ```
-To: oliof@keybase.io
+To: roland@li.name
 Subject: Testing Gnus Setup
-From: Guest User <kensanata@gmail.com>
+From: Guest User <alex@gnu.org>
 --text follows this line--
 <#secure method=pgpmime mode=encrypt>
-Hi Oliof
+Hi Roland
 
 This is a test for my tutorial.
 
@@ -445,24 +448,24 @@ even if they are empty. You should see a group called `[Gmail]/Sent Mail`.
 Enter it, and move to the end. You should see the mail you just wrote:
 
 ```
-O. [   ?: -> oliof@keybase.io    ] Testing Gnus Setup
+O. [   ?: -> roland@li.name      ] Testing Gnus Setup
 ```
 
 When you enter it, Gnus will ask you: `Decrypt (PGP) part? (y or n)`.
 If you answer correctly, you will see the email you sent. Maybe you'll
 have to provide your passphrase again. The only reason you can read
 this email is because it was encrypted both for the mail recipient
-(oliof) and your own key (because of the `mml2015-signers` setting).
+(Roland) and your own key (because of the `mml2015-signers` setting).
 
 Here you go:
 
 ```
-From: Guest User <kensanata@gmail.com>
+From: Guest User <alex@gnu.org>
 Subject: Testing Gnus Setup
-To: oliof@keybase.io
+To: roland@li.name
 Date: Fri, 24 Jul 2015 14:38:53 +0200 (16 minutes, 4 seconds ago)
 
-Hi Oliof
+Hi Roland
 
 This is a test for my tutorial.
 
@@ -478,7 +481,7 @@ This section is not necessarily required if all you want to do is send
 encrypted mail to friends and family. If you want to send encrypted
 mail to strangers, however, this section is for you.
 
-### Keyservers
+### Trust
 
 Remember how I said that giving people you meet face to face a copy of
 your public key is easy. Well, if you are not too worried then people
@@ -486,26 +489,30 @@ could look up public keys online. This would be a kind of service that
 allows you to search for the public keys of people by name or email
 address. These services exist and they are called keyservers.
 
-Modify your config file is `~/.gnupg/gpg.conf` and it probably already
-has a line there saying:
+Use `gpg --search` to search for a key:
 
 ```
-keyserver hkp://keys.gnupg.net
+guest@melanobombus:~$ gpg --search kensanata@gmail.com
+gpg: data source: https://209.244.105.201:443
+(1)	Alex Schroeder <alex@gnu.org>
+	Alex Schroeder <kensanata@gmail.com>
+	Alex Schroeder <kensanata@keybase.io>
+	Alex Schroeder <alex@alexschroeder.ch>
+	  8192 bit RSA key C78CA29BACECFEAE, created: 2015-03-01, expires: 2020-01-20 (expired)
+(2)	Alex Schroeder <alex@gnu.org>
+	Alex Schroeder <alex@emacswiki.org>
+	Alex Schroeder <kensanata@gmail.com>
+	  1024 bit DSA key 757368E7353AEFEF, created: 2002-07-10, expires: 2015-08-20 (revoked) (expired)
+Keys 1-2 of 2 for "kensanata@gmail.com".  Enter number(s), N)ext, or Q)uit > 
 ```
 
-If you want, you can leave it right there. If you want the connection
-from your machine to the key server to be *secured*, this is
-unfortunately not enough. In this case you want the schema to be
-`hkps` instead of `hkp`.
+I guess I've let these keys expire! Oops.
 
-Modify your `~/.gnupg/gpg.conf` and replace the existing keyserver
-line with the following line:
+### Trust
 
-```
-keyserver hkps://keys.gnupg.net
-```
-
-I'm also going to "trust" them all, so I've changed this setting:
+In order to avoid the warning about untrusted keys, I'm simply going
+to trust them all. Create a config file called `~/.gnupg/gpg.conf`
+with the following:
 
 ```
 # More like "Web of Mistrust", amirite??
@@ -538,27 +545,27 @@ Next, retrieve his public key from the keyserver. That's why we needed
 the keyserver: to get keys of strangers.
 
 ```
-Guest@Megabombus:~$ gpg --search edward-en@fsf.org
-gpg: searching for "edward-en@fsf.org" from hkps server hkps.pool.sks-keyservers.net
-(1) Edward the GPG Bot <edward@fsf.org>
-    Edward, the GPG Bot <edward-en@fsf.org>
-    GnuPGボットのEdward <edward-ja@fsf.org>
-    Edward, l'amichevole bot GnuPG <edward-it@fsf.org>
-    Edward, le gentil robot de GnuPG <edward-fr@fsf.org>
-    Edward, el simpático robot GnuPG <edward-es@fsf.org>
-    Edward, o amigo robô de GnuPG <edward-pt-br@fsf.org>
-    Edward, robotul GnuPG cel prietenos <edward-ro@fsf.org>
-    Edward, arkadaş canlısı GnuPG botu <edward-tr@fsf.org>
-    Edward, der freundliche GnuPG Roboter <edward-de@fsf.org>
-    Эдвард, дружелюбный GnuPG бот <edward-ru@fsf.org>
-    Edward, το φιλικό ρομπότ του GnuPG <edward-el@fsf.org
-      2048 bit RSA key C09A61E8, created: 2014-06-29
+guest@melanobombus:~$ gpg --search edward-en@fsf.org
+gpg: data source: https://209.244.105.201:443
+(1)	Edward the GPG Bot <edward@fsf.org>
+	Edward, the GPG Bot <edward-en@fsf.org>
+	GnuPGボットのEdward <edward-ja@fsf.org>
+	Edward, l'amichevole bot GnuPG <edward-it@fsf.org>
+	Edward, le gentil robot de GnuPG <edward-fr@fsf.org>
+	Edward, el simpático robot GnuPG <edward-es@fsf.org>
+	Edward, o amigo robô de GnuPG <edward-pt-br@fsf.org>
+	Edward, robotul GnuPG cel prietenos <edward-ro@fsf.org>
+	Edward, arkadaş canlısı GnuPG botu <edward-tr@fsf.org>
+	Edward, der freundliche GnuPG Roboter <edward-de@fsf.org>
+	Эдвард, дружелюбный GnuPG бот <edward-ru@fsf.org>
+	Edward, το φιλικό ρομπότ του GnuPG <edward-el@fsf.org
+	  2048 bit RSA key 9FF2194CC09A61E8, created: 2014-06-29
 Keys 1-1 of 1 for "edward-en@fsf.org".  Enter number(s), N)ext, or Q)uit > 1
-gpg: requesting key C09A61E8 from hkps server hkps.pool.sks-keyservers.net
-gpg: key C09A61E8: public key "Edward, el simpático robot GnuPG <edward-es@fsf.org>" imported
-gpg: no need for a trustdb check with `always' trust model
+gpg: key 9FF2194CC09A61E8: 7504 signatures not checked due to missing keys
+gpg: key 9FF2194CC09A61E8: public key "Edward, el simpático robot GnuPG <edward-es@fsf.org>" imported
+gpg: no need for a trustdb check with 'always' trust model
 gpg: Total number processed: 1
-gpg:               imported: 1  (RSA: 1)
+gpg:               imported: 1
 ```
 
 And now we can send him an email, signed and encrypted. This time we
@@ -650,172 +657,6 @@ Emacs!
 │                                                                                    │
 │            <OK>                                                  <Cancel>          │
 └────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-### GPG 2.0 and the GPG Agent
-
-First: if you use GPG 2.1 or later, you don't need to do anything. It
-starts the GPG Agent automatically. This section will eventually get
-deleted.
-
-What is the GPG Agent? The GPG Agent is a service that will remember
-your passphrase for a short while. If you don't use it, Gnus will ask
-you for your passphrase for every backend it uses (because it needs to
-decrypt the `~/.authinfo.gpg` file) and for every encrypted mail you
-read and for every encrypted mail you send. You'll be typing your
-passphrase a lot.
-
-For this to work with GPG 2.0, we need three pieces:
-
-1. we want to start the gpg-agent as soon as possible; it should write
-   its contact information into an environment file
-
-2. we want to contact an existing gpg-agent from the shell using this
-   environment file
-
-3. we want to contact an existing gpg-agent from Emacs using this
-   environment file
-
-I also find that sometimes the agent doesn't work as expected. Perhaps
-the agent died after a while, or Emacs was started before the agent
-was launched, whatever. I need some functions to help me out.
-
-Here's some code for your Emacs init file. It reads the environment
-file, checks whether the gpg-agent still exists, and if it does not,
-it tries to kill any unresponsive instances of the gpg-agent and
-starts a new one, writing a new environment file, and then it reads
-this environment file.
-
-```elisp
-(defun gpg-restart-agent ()
-  "This kills and restarts the gpg-agent.
-
-To kill gpg-agent, we use killall. If you know that the agent is
-OK, you should just reload the environment file using
-`gpg-reload-agent-info'."
-  (interactive)
-  (shell-command "killall gpg-agent")
-  (shell-command "gpg-agent --daemon --enable-ssh-support --write-env-file")
-  ;; read the environment file instead of parsing the output
-  (gpg-reload-agent-info))
-
-(defun gpg-reload-agent-info ()
-  "Reload the ~/.gpg-agent-info file."
-  (interactive)
-  (let ((file (expand-file-name "~/.gpg-agent-info")))
-    (when (file-readable-p file)
-      (with-temp-buffer
-	(insert-file-contents file)
-	(goto-char (point-min))
-	(while (re-search-forward "\\([A-Z_]+\\)=\\(.*\\)" nil t)
-	  (setenv (match-string 1) (match-string 2)))))))
-
-(defun gpg-agent-startup ()
-  "Initialize the gpg-agent if necessary.
-
-Note that sometimes the gpg-agent can be up and running and still
-be useless, in which case you should restart it using
-`gpg-restart-agent'."
-  (gpg-reload-agent-info)
-  (let ((pid (getenv "SSH_AGENT_PID")))
-    (when (and (fboundp 'list-system-processes)
-	       (or (not pid)
-		   (not (member (string-to-number pid)
-				(list-system-processes)))))
-      (gpg-restart-agent))))
-
-(gpg-agent-startup)
-```
-
-Sometimes setup instructions will tell you how to start the gpg-agent
-for a shell. The contact information is stored in environment
-variables which are exported to child processes. This works if you
-stick to a single terminal. All the processes you start inherit the
-environment and thus they can all contact the gpg-agent you started.
-However, if Emacs is started by a window manager, it does not inherit
-the environment from a shell. That's why we're using an environment
-file.
-
-If you want to use GPG from the shell, we repeat the same process
-using a shell script.
-
-Hopefully the gpg-agent was started for you by the operating system.
-This is what you hope to see:
-
-```
-Guest@Megabombus:~$ gpg-agent
-gpg-agent: gpg-agent running and available
-```
-
-If you just installed gpg-agent and it's not active, this is what you'll see:
-
-```
-Guest@Megabombus:~$ gpg-agent
-gpg-agent: no gpg-agent running in this session
-```
-
-Here's what you should put in your `~/.bashrc` file (this is
-[read by interactive non-login shells](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html#Bash-Startup-Files)
-and usually `~/.bash_profile` sources it as well).
-
-```bash
-# GPG
-function gpg-agent-restart {
-    killall gpg-agent
-    gpg-agent --daemon --enable-ssh-support --write-env-file
-    gpg-agent-reload-info
-}
-
-function gpg-agent-reload-info {
-    source ~/.gpg-agent-info
-    export GPG_AGENT_INFO
-    export SSH_AUTH_SOCK
-    export SSH_AGENT_PID
-}
-
-function gpg-agent-restart {
-    if test -f ~/.gpg-agent-info && \
-            kill -0 `grep GPG_AGENT_INFO $HOME/.gpg-agent-info | cut -d: -f2` 2>/dev/null; then
-        gpg-agent-reload-info
-    else
-        eval `gpg-agent --daemon --write-env-file`
-    fi
-}
-
-gpg-agent-restart
-GPG_TTY=$(tty)
-export GPG_TTY
-```
-
-Hopefully everything is working as intended, now.
-
-```
-Guest@Megabombus:~$ gpg-agent
-gpg-agent: gpg-agent running and available
-```
-
-### Migrating from GPG 2.0 to GPG 2.1
-
-The new GPG 2.1 comes with an integrated gpg-agent. It will just work.
-
-Here's what you might have to do, if you followed the advice provided
-in previous releases of this guide.
-
-```sh
-# switch versions using Homebrew
-brew remove gnupg2 gpg-agent dirmngr
-brew install gnupg
-# if you created these files
-rm ~/Library/LaunchAgents/org.gnupg.gpg-agent.plist
-rm ~/bin/startup-gpg-agent.sh
-# trigger migration
-gpg --list-secret
-```
-
-I also had to comment the following line in the `~/.gnupg/gpg.conf` file:
-
-```
-keyserver-options ca-cert-file=~/.gnupg/sks-keyservers.netCA.pem
 ```
 
 ## Further Reading
