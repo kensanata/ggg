@@ -45,7 +45,6 @@ surveillance much harder and more expensive to do.
 - [Bonus Material](#bonus-material)
     - [Keyservers](#keyservers)
     - [Testing](#testing)
-    - [Keybase](#keybase)
     - [Web Key Directory](#web-key-directory)
 - [Troubleshooting](#troubleshooting)
     - [Windows](#windows)
@@ -266,9 +265,7 @@ sub   4096R/0EC5C708 2015-07-24 [expires: 2016-07-23]
 
 The fingerprint is right here: `1A38 75FD 21ED 85BE 5AC6 BF49 5C1A C924
 7893 C0FD`. Put it on your web page, in your email signatures, tweet it,
-and so on. Consider using [Keybase](https://keybase.io/). It allows you
-to "Get a public key, safely, starting just with someone's social media
-username(s)." We'll talk about it [down below](#keybase).
+and so on.
 
 ## Getting a password for Gmail
 
@@ -576,106 +573,6 @@ Your signature was verified.
 ```
 
 Yay!
-
-### Keybase
-
-Remember what I wrote about the *Web of Trust*? More like the *Web Of
-Mistrust*! Why is that? Here's how it works. The basic problem is that
-I need to get the key from me to you without anybody getting in the
-way, claiming to be you, getting my messages, reading them, encrypting
-them again for you, and sending them on. That's
-a
-[Man-in-the-Middle Attack](https://en.wikipedia.org/wiki/Man-in-the-middle_attack).
-
-The *Web of Trust* solution is this: If there's a chain of people that
-trust each other, and are willing to prove it using electronic
-signatures, then me and you don't need to meet in person. I trust B, B
-trusts C, C trusts you, and since we all went to key signing parties
-and signed each other's keys, C signing your key, B signing C's key,
-and me signing B's key, trusting the id documents that we showed each
-other, a program can establish that your key is in fact your key and
-and not a key by the ominous man in the middle.
-
-If you're like me, however, then you're not going to key signing
-parties and most of your friends don't sign keys, and you don't trust
-yourself to actually verify official looking documents presented to
-you by strangers, so it all falls apart.
-Enter [Keybase](https://keybase.io/).
-
-If I know you via some social media such as Facebook or Twitter, and I
-trust the company, then you can post a note using your key and I'll be
-able to verify whether the key I have actually belongs to you. It's
-not great, but it certainly beats no checking at all, which is what
-happens when nobody ever goes to these key signing parties.
-
-Here's how it would work. We have a Keybase account and our friend has
-a keybase account. We already logged in and provided some identity of
-our own. You can read about that on the Keybase website. I'm only
-going to talk about the GPG interaction.
-
-First, let's search for our friend on Keybase:
-
-```
-Guest@Megabombus:~$ keybase search oliof
-oliof twitter:oliof github:oliof reddit:oliof dns://mausdompteur.de
-```
-
-Looks like that's the one we're looking for. Use `keybase id` to check
-their identity or skip right ahead and follow them. We'll get to see
-the same information. Let's follow some of the links and verify that
-this is in fact the person we're friends with. Once we're happy, we
-can answer the prompts at the end.
-
-```
-Guest@Megabombus:~$ keybase follow oliof
-▶ INFO Identifying oliof
-✔ public key fingerprint: 3F52 9A92 95BA 3B5F C0AC 51FC FF13 FA29 5F87 1B02
-✔ public key fingerprint: DAA5 6B12 9C14 D9A5 D7CF 9620 E6DF 6411 D205 2305
-✔ public key fingerprint: 44FC 4A78 1A34 8B84 CA64 B4BD 187C 634F 6F28 287D
-✔ admin of DNS zone mausdompteur.de: found TXT entry keybase-site-verification=3FxhCxIB1ZThFffAN6e3cgyIUUBdr6888HnguupxE0E
-✔ "oliof" on reddit: https://www.reddit.com/r/KeybaseProofs/comments/38c5yz/my_keybase_proof_redditoliof_keybaseoliof/
-✔ "oliof" on github: https://gist.github.com/e1ba51d40d9c8099439f
-✔ "oliof" on twitter: https://twitter.com/oliof/status/605819241867001858
-Is this the oliof you wanted? [Y/n] 
-Publicly follow? [Y/n] 
-```
-
-Here's the interesting part: Now that we're following them, we can
-pull their public key into our public keyring. As our friend appears
-to have three public keys, we'll be getting three different keys:
-
-```
-Guest@Megabombus:~$ keybase pgp pull
-...
-▶ INFO Imported key for oliof.
-▶ INFO Imported key for oliof.
-▶ INFO Imported key for oliof.
-...
-```
-
-With that done, I can send them email using Gnus, Gmail, and GPG. 👍
-
-It behoves us to remember, however, what this means: anybody can now
-look up our crypto friends on Keybase. This is called
-[social network analysis](https://en.wikipedia.org/wiki/Social_network_analysis#Practical_applications).
-Perhaps you don't mind using Keybase with strangers because you can be
-pretty sure that the key belongs to the online persona you know. At
-the same time, perhaps you don't want to be associated with these
-people so instead of following oliof, I might have done this:
-
-```
-Guest@Megabombus:~$ curl -s https://keybase.io/oliof/key.asc | gpg --import
-gpg: key A94BD07E: public key "Harald Wagener <keybase@mausdompteur.de>" imported
-gpg: Total number processed: 1
-gpg:               imported: 1  (RSA: 1)
-```
-
-It works just as well! 👍👍
-
-Thus:
-
-1. upload and verify your identity, if you want
-2. don't follow anybody, just use the command line to import their keys
 
 ### Web Key Directory
 
