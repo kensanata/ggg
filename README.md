@@ -37,6 +37,7 @@ surveillance much harder and more expensive to do.
 
 - [Getting a secret key for GPG](#getting-a-secret-key-for-gpg)
 - [Exchanging public keys with partners](#exchanging-public-keys-with-partners)
+- [Encrypting a file](#encrypting-a-file)
 - [Getting a password for Gmail](#getting-a-password-for-gmail)
 - [Storing your Gmail password for Gnus, using GPG to encrypt it](#storing-your-gmail-password-for-gnus-using-gpg-to-encrypt-it)
 - [Setting up Gnus for Gmail](#setting-up-gnus-for-gmail)
@@ -44,13 +45,12 @@ surveillance much harder and more expensive to do.
 - [Send encrypted mail](#send-encrypted-mail)
 - [Bonus Material](#bonus-material)
     - [Keyservers](#keyservers)
+    - [Trust](#trust)
     - [Testing](#testing)
     - [Web Key Directory](#web-key-directory)
 - [Troubleshooting](#troubleshooting)
     - [Windows](#windows)
     - [Mac](#mac)
-    - [GPG 2.0 and the GPG Agent](#gpg-20-and-the-gpg-agent)
-    - [Migrating from GPG 2.0 to GPG 2.1](#migrating-from-gpg-20-to-gpg-21)
 - [Further Reading](#further-reading)
 
 <!-- markdown-toc end -->
@@ -206,7 +206,7 @@ They would save this block in a file such as `alex.pub` and import it.
 Here, I got a public key from a friend and imported it.
 
 ```
-guest@melanobombus:~$ gpg --import roland.pub 
+guest@melanobombus:~$ gpg --import roland.pub
 gpg: key A5E1F208237B14BE: public key "Roland Li <roland@li.name>" imported
 gpg: Total number processed: 1
 gpg:               imported: 1
@@ -481,7 +481,7 @@ This section is not necessarily required if all you want to do is send
 encrypted mail to friends and family. If you want to send encrypted
 mail to strangers, however, this section is for you.
 
-### Trust
+### Keyservers
 
 Remember how I said that giving people you meet face to face a copy of
 your public key is easy. Well, if you are not too worried then people
