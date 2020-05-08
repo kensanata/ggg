@@ -665,6 +665,6 @@ Emacs!
   in *The GNU Privacy Handbook*
 * [Making and verifying signatures](https://www.gnupg.org/gph/en/manual/x135.html),
   also in *The GNU Privacy Handbook*
-* [Harden Your GnuPG Configuration](https://www.designed-cybersecurity.com/tutorials/harden-your-gnupg-config/)
+* [Harden Your GnuPG Configuration](https://www.designed-cybersecurity.com/tutorials/harden-gnupg-config/)
 * [Operational PGP](https://gist.github.com/grugq/03167bed45e774551155)
 * [Creating a new GPG key](http://keyring.debian.org/creating-key.html)
